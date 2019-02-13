@@ -2,9 +2,10 @@ const isProperCata = obj => obj.Just && obj.Nothing
 const improperCata = () => { throw new Error('Cata missing Just or Maybe') }
 
 export const Just = arg => ({
+  ap: cb => cb.map(x => arg(x)),
   map: cb => Just(cb(arg)),
   chain: cb => cb(arg),
-  default: () => {},
+  default: () => Just(arg),
   cata: obj => isProperCata(obj)
     ? obj.Just(arg)
     : improperCata(),
@@ -14,6 +15,7 @@ export const Just = arg => ({
 })
 
 export const Nothing = ({
+  ap: () => Nothing,
   map: () => Nothing,
   chain: () => Nothing,
   default: cb => Maybe(cb()),

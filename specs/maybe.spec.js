@@ -35,7 +35,7 @@ describe('Maybe', () => {
       .map(x => x + ' world')
       .cata({
         Just: x => expect(x).toBe('hello world'),
-        Nothing: () => done.fail()
+        Nothing: () => done.fail('Should not be Nothing')
       })
 
     Maybe(null)
@@ -47,6 +47,67 @@ describe('Maybe', () => {
       })
 
     expect(() => Maybe().cata({})).toThrow()
+  })
+
+  it('should return a default value if nothing', done => {
+    Maybe(null)
+      .default(() => 'some default')
+      .cata({
+        Just: x => expect(x).toBe('some default'),
+        Nothing: () => done.fail('Should not be Nothing')
+      })
+
+    Maybe('some data')
+      .chain(data => Maybe(null))
+      .default(() => 'some default')
+      .cata({
+        Just: x => expect(x).toBe('some default'),
+        Nothing: () => done.fail('Should not be Nothing')
+      })
+
+    done()
+  })
+
+  it(`should ignore the default if it's not nothing`, done => {
+    Maybe({ name: 'jason' })
+      .map(person => person.name)
+      .default(() => 'some default')
+      .cata({
+        Just: x => expect(x).toBe('jason'),
+        Nothing: () => done.fail('Should not be Nothing')
+      })
+
+    done()
+  })
+
+  it('should inspect properly', () => {
+    expect(Maybe('hello').inspect()).toBe('Just(hello)')
+    expect(Maybe(null).inspect()).toBe('Nothing')
+  })
+
+  it('should apply 2 monads with ap', done => {
+    const add = x => y => x + y
+    const one = Maybe(1)
+    const two = Maybe(2)
+
+    Maybe(add)
+      .ap(one)
+      .ap(two)
+      .cata({
+        Just: x => expect(x).toBe(3),
+        Nothing: () => done.fail('Should not be Nothing')
+      })
+
+    Maybe(null)
+      .ap(one)
+      .ap(two)
+      .cata({
+        Just: () => done.fail(),
+        Nothing: done
+      })
+
+    done()
+
   })
 
 })
