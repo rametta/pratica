@@ -30,7 +30,7 @@ Table of Contents
     + tail
     + slice
     + range
-    + parseDate
+    + [parseDate](#parsedate)
     + parseFloat
     + parseInt
     + compose
@@ -111,4 +111,29 @@ Maybe(null) // no function to apply
 ```
 
 ### Utilities
-*Coming soon...*
+#### parseDate
+Safely parse date strings. parseDate returns a Maybe monad.
+```js
+import { parseDate } from 'pratica'
+
+const goodDate = '2019-02-13T21:04:10.984Z'
+const badDate = '2019-02-13T21:04:1'
+
+parseDate(goodDate).cata({
+  Just: date => expect(date.toISOString()).toBe(goodDate),
+  Nothing: () => console.log('could not parse date string') // this function doesn't run
+})
+
+parseDate(badDate).cata({
+  Just: () => console.log(`this function doesn't run`),
+  Nothing: () => 'this function runs'
+})
+
+// it's a maybe, so you can use chain/default/ap
+parseDate(null)
+  .default(() => new Date())
+  .cata({
+    Just: date => date.toISOString(), // this runs
+    Nothing: () => `doesn't run because of the .default()`
+  })
+```
