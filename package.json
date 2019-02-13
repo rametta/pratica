@@ -1,0 +1,31 @@
+{
+  "name": "pratica",
+  "version": "1.0.0",
+  "description": "Functional Programming for Perfectionists",
+  "main": "dist/index.js",
+  "author": "Jason Rametta",
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts": {
+    "watch": "yarn build --watch",
+    "deploy": "yarn build && yarn publish",
+    "build": "babel src -d dist",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "@types/jest": "^24.0.3",
+    "jest": "^24.1.0"
+  },
+  "keywords": [
+    "functional",
+    "lightweight",
+    "monads",
+    "monoids",
+    "tasks",
+    "fast",
+    "easy"
+  ]
+}
