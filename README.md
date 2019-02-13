@@ -9,7 +9,7 @@
 
 *Why is this for pragmatists you say?*
 
-Pratica sacrifices some common FP guidelines in order to provide a simpler and more approachable API that can used to accomplish your goals quickly - while maintaining data integrity and saftey, through algrebraic data types.
+Pratica sacrifices some common FP guidelines in order to provide a simpler and more approachable API that can be used to accomplish your goals quickly - while maintaining data integrity and saftey, through algrebraic data types.
 
 ## Install
 ```sh
@@ -19,11 +19,11 @@ yarn add pratica
 ## Documentation
 
 Table of Contents
-  - Monads
-    + Maybe
+  - [Monads](#monads)
+    + [Maybe](#maybe)
     + Result
     + Task
-  - Utilities
+  - [Utilities](#utilities)
     + encase
     + get
     + head
@@ -56,6 +56,15 @@ Maybe(person)
   .cata({
     Just: age => console.log(age) // 9
     Nothing: () => console.log(`This function won't run`)
+  })
+
+// Example with real data
+Maybe(person)
+  .chain(p => Maybe(p.age)) // maybe age might be null
+  .map(age => age + 5)
+  .cata({
+    Just: age => console.log(age) // this function won't run because the data is null
+    Nothing: () => console.log('This function runs')
   })
 
 // Example with null data
