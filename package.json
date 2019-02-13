@@ -1,8 +1,8 @@
 {
   "name": "pratica",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Functional Programming for Perfectionists",
-  "main": "dist/index.js",
+  "main": "dist/",
   "author": "Jason Rametta",
   "license": "Apache-2.0",
   "private": false,
