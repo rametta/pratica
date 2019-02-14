@@ -21,10 +21,13 @@ yarn add pratica
 Table of Contents
   - [Monads](#monads)
     + [Maybe](#maybe)
-    + Result
+    + [Result](#result)
     + Task
   - [Utilities](#utilities)
-    + encase
+    + [encase](#encase)
+    + [encaseRes](#encaseRes)
+    + [justs](#justs)
+    + [oks](#oks)
     + get
     + head
     + tail
@@ -110,6 +113,51 @@ Maybe(null) // no function to apply
   })
 ```
 
+#### Result
+Use this when dealing with conditional logic. Often a replacment for if statements - or for simplifyinf complex logic trees. A Result can either be a `Ok` or an `Err` type.
+
+Example 1: Name check
+```js
+import { Ok, Err } from 'pratica'
+
+const person = { name: 'jason', age: 4 }
+
+Ok(person)
+  .map(p => p.name)
+  .chain(name => name === 'jason' ? Ok(name) : Err('Name not jason'))
+  .cata({
+    Ok: name => console.log(name), // 'jason'
+    Err: msg => console.error(msg) // this func does not run, but if it did, it would be 'Name not jason'
+  })
+```
+
+Example 2: Many checks
+```js
+const person = { name: 'Jason', age: 4 }
+
+const isPerson = p => p.name && p.age
+  ? Ok(p)
+  : Err('Not a person')
+
+const isOlderThan2 = p => p.age > 2
+  ? Ok(p)
+  : Err('Not older than 2')
+
+const isJason = p => p.name === 'jason'
+  ? Ok(p)
+  : Err('Not jason')
+
+Ok(person)
+  .chain(isPerson)
+  .chain(isOlderThan2)
+  .chain(isJason)
+  .cata({
+    Ok: p => console.log('this person satisfies all the checks'),
+    Err: msg => console.log(msg) // if any checks return an Err, then this function will be called. If isPerson returns Err, then isOlderThan2 and isJason functions won't even execute, and the err msg would be 'Not a person'
+  })
+```
+
+
 ### Utilities
 #### parseDate
 Safely parse date strings. parseDate returns a Maybe monad.
@@ -136,4 +184,66 @@ parseDate(null)
     Just: date => date.toISOString(), // this runs
     Nothing: () => `doesn't run because of the .default()`
   })
+```
+
+#### encase
+Safely run functions that may throw an error or crash. encase returns a Maybe type (so Just or Nothing).
+```js
+import { encase } from 'pratica'
+
+const throwableFunc = () => JSON.parse('<>')
+
+// this func doesn't throw, so Just is called
+encase(() => 'hello').cata({
+  Just: x => console.log(x), // hello
+  Nothing: () => console.log('func threw error') // this func doesn't run
+})
+
+// this function throws an error so Nothing is called
+encase(throwableFunc).cata({
+  Just: json => console.log(`doesn't run`),
+  Nothing: () => console.error('func threw an error') // this runs
+})
+```
+
+#### encaseRes
+Safely run functions that may throw an error or crash. encase returns a Result type (so Ok or Err). Similar to `encase` but the Err returns the error message.
+```js
+import { encaseRes } from 'pratica'
+
+const throwableFunc = () => JSON.parse('<>')
+
+// this func doesn't throw, so Ok is called
+encaseRes(() => 'hello').cata({
+  Ok: x => console.log(x), // hello
+  Err: () => console.log('func threw error') // this func doesn't run
+})
+
+// this function throws an error so Err is called
+encaseRes(throwableFunc).cata({
+  Ok: json => console.log(`doesn't run`),
+  Err: msg => console.error(msg) // SyntaxError: Unexpected token < in JSON at position 0
+})
+```
+
+#### justs
+Filter out any non-Just data type from an array
+
+```js
+import { justs } from 'pratica'
+
+const data = [1, true, Just('hello'), Nothing, Ok('hey'), Err('No good')]
+
+justs(data) // returns [Just('hello')]
+```
+
+#### oks
+Filter out any non-Ok data type from an array
+
+```js
+import { oks } from 'pratica'
+
+const data = [1, true, Just('hello'), Nothing, Ok('hey'), Err('No good')]
+
+oks(data) // returns [Ok('hey')]
 ```

@@ -1,2 +1,6 @@
 export { Maybe, Just, Nothing } from './maybe'
+export { Ok, Err } from './result'
 export { parseDate } from './parseDate'
+export { encase, encaseRes } from './encase'
+export { oks } from './oks'
+export { justs } from './justs'

@@ -107,7 +107,6 @@ describe('Maybe', () => {
       })
 
     done()
-
   })
 
 })
