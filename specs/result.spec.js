@@ -1,4 +1,5 @@
 import { Ok, Err } from './../src/result'
+import { disconnect } from 'cluster';
 
 describe('Result', () => {
 
@@ -124,6 +125,53 @@ describe('Result', () => {
       .cata({
         Ok: x => expect(x).toBe('hello some err world'),
         Err: done.fail
+      })
+
+    done()
+  })
+
+  it('should swap Err for Ok and Ok for Err', done => {
+
+    Ok('hello')
+      .swap()
+      .cata({
+        Ok: done.fail,
+        Err: x => expect(x).toBe('hello')
+      })
+
+    Err('hello')
+      .swap()
+      .cata({
+        Ok: x => expect(x).toBe('hello'),
+        Err: done.fail
+      })
+
+    Ok('hello')
+      .swap()
+      .swap()
+      .swap()
+      .cata({
+        Ok: done.fail,
+        Err: x => expect(x).toBe('hello')
+      })
+
+    done()
+  })
+
+  it('should have a bimap to map over both ok and err at once', done => {
+
+    Ok('hello')
+      .bimap(x => x + ' world', x => x + ' goodbye')
+      .cata({
+        Ok: x => expect(x).toBe('hello world'),
+        Err: done.fail
+      })
+
+    Err('hello')
+      .bimap(x => x + ' world', x => x + ' goodbye')
+      .cata({
+        Ok: done.fail,
+        Err: x => expect(x).toBe('hello goodbye')
       })
 
     done()

@@ -7,6 +7,8 @@ export const Ok = arg => ({
   mapErr: () => Ok(arg),
   chain: cb => cb(arg),
   chainErr: () => Ok(arg),
+  swap: () => Err(arg),
+  bimap: (ok, err) => Ok(ok(arg)),
   cata: obj => isProperCata(obj)
     ? obj.Ok(arg)
     : improperCata(),
@@ -21,6 +23,8 @@ export const Err = arg => ({
   mapErr: cb => Err(cb(arg)),
   chain: () => Err(arg),
   chainErr: cb => cb(arg),
+  swap: () => Ok(arg),
+  bimap: (ok, err) => Err(err(arg)),
   cata: obj => isProperCata(obj)
     ? obj.Err(arg)
     : improperCata(),

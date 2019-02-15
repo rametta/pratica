@@ -22,22 +22,16 @@ Table of Contents
   - [Monads](#monads)
     + [Maybe](#maybe)
     + [Result](#result)
-    + Task
   - [Utilities](#utilities)
     + [encase](#encase)
     + [encaseRes](#encaseRes)
     + [justs](#justs)
     + [oks](#oks)
-    + get
-    + head
-    + tail
-    + slice
-    + range
+    + [get](#get)
+    + [head](#head)
+    + [last](#last)
+    + [tail](#tail)
     + [parseDate](#parsedate)
-    + parseFloat
-    + parseInt
-    + compose
-    + pipe
 
 ### Monads
 
@@ -185,6 +179,37 @@ Err('Message:')
   })
 ```
 
+Use `.swap()` to convert an Err to an Ok, or an Ok to an Err.
+```js
+import { ok } from 'pratica'
+
+Ok('hello')
+  .swap()
+  .cata({
+    Ok: () => console.log(`doesn't run`),
+    Err: x => expect(x).toBe('hello') // true
+  })
+```
+
+Use `.bimap()` for easily modifying an Ok or an Err
+```js
+import { ok } from 'pratica'
+
+Ok('hello')
+  .bimap(x => x + ' world', x => x + ' goodbye')
+  .cata({
+    Ok: x => expect(x).toBe('hello world'), // true
+    Err: () => {}
+  })
+
+Err('hello')
+  .bimap(x => x + ' world', x => x + ' goodbye')
+  .cata({
+    Ok: () => {},
+    Err: x => expect(x).toBe('hello goodbye') // true
+  })
+```
+
 ### Utilities
 #### parseDate
 Safely parse date strings. parseDate returns a Maybe monad.
@@ -273,4 +298,98 @@ import { oks } from 'pratica'
 const data = [1, true, Just('hello'), Nothing, Ok('hey'), Err('No good')]
 
 oks(data) // returns [Ok('hey')]
+```
+
+#### get
+Safely retrieve a nested property in an object. Returns a Maybe.
+```js
+import { get } from 'pratica'
+
+const data = {
+  name: 'jason',
+  children: [
+    {
+      name: 'bob'
+    },
+    {
+      name: 'blanche',
+      children: [
+        {
+          name: 'lera'
+        }
+      ]
+    }
+  ]
+}
+
+get(['children', 1, 'children', 0, 'name'])(data).cata({
+  Just: name => expect(name).toBe('lera'), // true
+  Nothing: () => console.log('no name') // doesn't run
+})
+```
+
+#### head
+Safely get the first item in an array. Returns a Maybe.
+```js
+import { head } from 'pratica'
+
+const data = [5,1,2]
+
+// example with data
+head(data)
+  .cata({
+    Just: x => expect(x).toBe(5), // true,
+    Nothing: () => console.log('No head') // won't run
+  })
+
+// example with empty data
+head([])
+  .cata({
+    Just: x => console.log(x), // doesn't run
+    Nothing: () => console.log('No head') // runs 
+  })
+```
+
+#### last
+Safely get the last item in an array. Returns a Maybe.
+```js
+import { last } from 'pratica'
+
+const data = [5,1,2]
+
+// example with data
+last(data)
+  .cata({
+    Just: x => expect(x).toBe(2), // true,
+    Nothing: () => console.log('No last') // won't run
+  })
+
+// example with empty data
+last([])
+  .cata({
+    Just: x => console.log(x), // doesn't run
+    Nothing: () => console.log('No last') // runs 
+  })
+```
+
+#### tail
+Safely get the tail of an array (Everything except the first element). Returns a Maybe.
+```js
+import { tail } from 'pratica'
+
+const data = [5,1,2]
+
+// example with data
+tail(data)
+  .cata({
+    Just: x => expect(x).toEqual([1,2]), // true,
+    Nothing: () => console.log('No tail') // won't run
+  })
+
+// example with empty data
+last([])
+  .cata({
+    Just: x => console.log(x), // doesn't run
+    Nothing: () => console.log('No tail') // runs 
+  })
 ```
