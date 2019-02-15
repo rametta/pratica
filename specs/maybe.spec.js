@@ -1,4 +1,4 @@
-const { Maybe } = require('./../src/index')
+const { Maybe } = require('./../src/maybe')
 
 describe('Maybe', () => {
 

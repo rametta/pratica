@@ -4,7 +4,9 @@ const improperCata = () => { throw new Error('Cata missing Ok or Err') }
 export const Ok = arg => ({
   ap: cb => cb.map(x => arg(x)),
   map: cb => Ok(cb(arg)),
+  mapErr: () => Ok(arg),
   chain: cb => cb(arg),
+  chainErr: () => Ok(arg),
   cata: obj => isProperCata(obj)
     ? obj.Ok(arg)
     : improperCata(),
@@ -14,9 +16,11 @@ export const Ok = arg => ({
 })
 
 export const Err = arg => ({
-  ap: Err,
-  map: Err,
-  chain: Err,
+  ap: () => Err(arg),
+  map: () => Err(arg),
+  mapErr: cb => Err(cb(arg)),
+  chain: () => Err(arg),
+  chainErr: cb => cb(arg),
   cata: obj => isProperCata(obj)
     ? obj.Err(arg)
     : improperCata(),

@@ -157,6 +157,33 @@ Ok(person)
   })
 ```
 
+You can also modify errors that may return from any result before getting the final result, by using `.mapErr` or `.chainErr`.
+
+Example using `.mapErr`
+```js
+import { Err } from 'pratica'
+
+Err('Message:')
+  .mapErr(x => x + ' Syntax Error')
+  .map(x => x + 7) // ignored because it's an error
+  .cata({
+    Ok: x => console.log(x), // function not ran
+    Err: x => console.log(x) // 'Message: Syntax Error'
+  })
+```
+
+Example using `.chainErr`
+```js
+import { Err } from 'pratica'
+
+Err('Message:')
+  .chainErr(x => x + Err(' Syntax Error'))
+  .map(x => x + 7) // ignored because it's an error
+  .cata({
+    Ok: x => console.log(x), // function not ran
+    Err: x => console.log(x) // 'Message: Syntax Error'
+  })
+```
 
 ### Utilities
 #### parseDate
