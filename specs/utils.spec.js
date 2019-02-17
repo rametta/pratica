@@ -8,6 +8,7 @@ import { get } from './../src/get'
 import { head } from './../src/head'
 import { last } from './../src/last'
 import { tail } from './../src/tail'
+import { tryFind } from './../src/tryFind'
 
 describe('utililties', () => {
 
@@ -169,6 +170,27 @@ describe('utililties', () => {
       })
 
     tail([])
+      .cata({
+        Just: done.fail,
+        Nothing: done
+      })
+
+    done()
+  })
+
+  it('tryFind: should try to find an element in an array and return a maybe', done => {
+    const data = [
+      {name: 'jason', age: 6, id: '123abc'},
+      {name: 'bob', age: 68, id: '456def'}
+    ]
+
+    tryFind(x => x.id === '123abc')(data)
+      .cata({
+        Just: person => expect(person).toEqual(data[0]),
+        Nothing: done.fail
+      })
+
+    tryFind(x => x.id === 'abcdef')(data)
       .cata({
         Just: done.fail,
         Nothing: done

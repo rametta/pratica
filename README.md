@@ -31,6 +31,7 @@ Table of Contents
     + [head](#head)
     + [last](#last)
     + [tail](#tail)
+    + [tryFind](#tryfind)
     + [parseDate](#parsedate)
 
 ### Monads
@@ -391,5 +392,23 @@ last([])
   .cata({
     Just: x => console.log(x), // doesn't run
     Nothing: () => console.log('No tail') // runs 
+  })
+```
+
+#### tryFind
+Safely try to retrieve an item from an array. Returns a Maybe.
+
+```js
+import { tryFind } from 'pratica'
+
+const users = [
+  {name: 'jason', age: 6, id: '123abc'},
+  {name: 'bob', age: 68, id: '456def'}
+]
+
+tryFind(u => u.id === '123abc')(users)
+  .cata({
+    Just: user => expect(user).toEqual(users[0]), // true
+    Nothing: () => 'Could not find user with id 123abc' // doesn't run
   })
 ```

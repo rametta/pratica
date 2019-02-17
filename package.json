@@ -1,6 +1,6 @@
 {
   "name": "pratica",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "Functional Programming for Pragmatists",
   "main": "dist/",
   "author": "Jason Rametta",
@@ -21,6 +21,11 @@
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-multi-entry": "^2.1.0"
   },
+  "repository": "https://github.com/rametta/pratica.git",
+  "bugs": {
+    "url": "https://github.com/rametta/pratica/issues"
+  },
+  "homepage": "https://github.com/rametta/pratica",
   "keywords": [
     "functional",
     "lightweight",
