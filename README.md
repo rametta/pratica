@@ -52,7 +52,7 @@ Maybe(person)
   .map(p => p.age)
   .map(age => age + 5)
   .cata({
-    Just: age => console.log(age) // 9
+    Just: age => console.log(age), // 9
     Nothing: () => console.log(`This function won't run`)
   })
 
@@ -61,7 +61,7 @@ Maybe(person)
   .chain(p => Maybe(p.age)) // maybe age might be null
   .map(age => age + 5)
   .cata({
-    Just: age => console.log(age) // this function won't run because the data is null
+    Just: age => console.log(age), // this function won't run because the data is null
     Nothing: () => console.log('This function runs')
   })
 
@@ -70,7 +70,7 @@ Maybe(null)
   .map(p => p.age)
   .map(age => age + 5)
   .cata({
-    Just: age => console.log(age) // this function won't run because the data is null
+    Just: age => console.log(age), // this function won't run because the data is null
     Nothing: () => console.log('This function runs')
   })
 
@@ -80,7 +80,7 @@ Maybe(null)
   .map(age => age + 5)
   .default(() => 99) // the data is null so 99 is the default
   .cata({
-    Just: age => console.log(age) // 99
+    Just: age => console.log(age), // 99
     Nothing: () => console.log(`This function won't run`)
   })
 ```
@@ -103,7 +103,7 @@ Maybe(null) // no function to apply
   .ap(Maybe(6))
   .ap(Maybe(7))
   .cata({
-    Just: () => console.log(`This function won't run`)
+    Just: () => console.log(`This function won't run`),
     Nothing: () => console.log(`This function runs`)
   })
 ```
