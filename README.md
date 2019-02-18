@@ -57,7 +57,7 @@ Maybe(person)
   })
 
 // Example with real data
-Maybe(person)
+Maybe(null)
   .chain(p => Maybe(p.age)) // maybe age might be null
   .map(age => age + 5)
   .cata({
