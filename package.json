@@ -1,6 +1,6 @@
 {
   "name": "pratica",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "description": "Functional Programming for Pragmatists",
   "main": "dist/",
   "types": "index.d.ts",

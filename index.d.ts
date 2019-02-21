@@ -1,33 +1,25 @@
-type Maybe<T> = Just<T>|Nothing
-
-type Just<T> = {
-  ap(cb: () => T): Maybe<T>
-  map(cb: (arg: T) => T): Just<T>
-  chain(cb: () => Maybe<T>): T
-  default(cb: () => T): Maybe<T>
-  cata: {
-    Just(arg: T): any
-    Nothing(): any
-  }
-  inspect(): string
-  isNothing(): boolean
-  isJust(): boolean
+type Maybe<A> = {
+  ap: <B>(cb: () => B) => Maybe<B>
+  map: <B>(cb: (arg: A) => B) => Maybe<B>
+  chain: <B>(cb: (arg: A) => B) => Maybe<B>
+  default: <B>(cb: () => B) => Maybe<B>
+  cata: <B, C>(obj: {
+    Just: (arg: A) => B
+    Nothing: () => C
+  }) => B|C
+  inspect: () => string
+  isNothing: () => boolean
+  isJust: () => boolean
 }
 
-type Nothing = {
-  ap(cb: () => any): Nothing
-  map(cb: () => any): Nothing
-  chain(cb: () => any): Nothing
-  default(cb: () => any): Maybe<any>
-  cata: {
-    Just(arg): any
-    Nothing(): any
-  }
-  inspect(): string
-  isNothing(): boolean
-  isJust(): boolean
-}
-
-export function Maybe<T>(arg: T): Just<T> | Nothing
-export function Just<T>(arg: T): Just<T>
-export function Nothing(): Nothing
+export type Nothing = Maybe<any>
+export function Maybe<A>(arg: A): Maybe<A>
+export function Just<A>(arg: A): Maybe<A>
+export function head<A>(arr: A[]): Maybe<A>
+export function tail<A>(arr: A[]): Maybe<A>
+export function last<A>(arr: A[]): Maybe<A>
+export function parseDate(date: string): Maybe<Date>
+export function get<A>(selector: (String|Number)[]): (data: any) => Maybe<A>
+export function tryFind<A>(selector: any[]): (data: A[]) => Maybe<A>
+export function justs<A>(arr: any[]): Maybe<A>[]
+export function encase<A>(throwableFunc: () => A): Maybe<A>
