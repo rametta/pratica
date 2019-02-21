@@ -1,8 +1,9 @@
 {
   "name": "pratica",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Functional Programming for Pragmatists",
   "main": "dist/",
+  "types": "index.d.ts",
   "author": "Jason Rametta",
   "license": "Apache-2.0",
   "private": false,
