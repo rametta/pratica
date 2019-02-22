@@ -7,10 +7,10 @@
   "private": false,
   "scripts": {
     "dev": "./node_modules/.bin/webpack --config webpack.config.js --mode=development --watch",
-    "build": "./node_modules/.bin/webpack --config webpack.config.js"
+    "build": "./node_modules/.bin/webpack --config webpack.config.js --mode=production",
+    "deploy": "yarn build && surge -d pratica-example.surge.sh -p src"
   },
   "dependencies": {
-    "axios": "^0.18.0",
     "pratica": "^1.4.7"
   },
   "devDependencies": {

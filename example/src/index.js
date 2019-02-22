@@ -1,20 +1,21 @@
-import axios from 'axios'
 import { Maybe, get } from 'pratica'
 
-const getUsers = () => axios
-  .get('https://jsonplaceholder.typicode.com/users')
+const getUsers = () => fetch('https://jsonplaceholder.typicode.com/users')
+  .then(res => res.json())
   .then(recUsers)
   .catch(errUsers)
 
 const recUsers = res => Maybe(res)
-  .chain(get(['data']))
   .map(users => console.log(users) || users)
   .cata({
-    Just: users => `<div class="container">
+    Just: users => `
+    <div class="container">
+      <h1 class="title is-1">Peoples</h1>
       <div class="columns is-multiline">
         ${users.map(card).join('')}
       </div>
-    </div>`,
+    </div>
+    `,
     Nothing: () => 'Could not format data'
   })
 
@@ -42,11 +43,10 @@ const card = user => `
       </div>
 
       <div class="content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-        <a href="#">#css</a> <a href="#">#responsive</a>
+        <div>${user.company.catchPhrase}</div>
+        <a href="http://${user.website}">${user.website}</a>
         <br>
-        <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+        <strong>${user.phone}</strong>
       </div>
     </div>
   </div>
