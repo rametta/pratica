@@ -1,7 +1,7 @@
 type Maybe<A> = {
   ap: <B>(cb: () => B) => Maybe<B>
   map: <B>(cb: (arg: A) => B) => Maybe<B>
-  chain: <B>(cb: (arg: A) => B) => Maybe<B>
+  chain: <B>(cb: (arg: A) => B) => B
   default: <B>(cb: () => B) => Maybe<B>
   cata: <B, C>(obj: {
     Just: (arg: A) => B
@@ -10,6 +10,23 @@ type Maybe<A> = {
   inspect: () => string
   isNothing: () => boolean
   isJust: () => boolean
+}
+
+type Result<Ok, Err> = {
+  ap: <A>(cb: () => A) => Result<A, Err>
+  map: <A>(cb: (arg: Ok) => A) => Result<A, Err>
+  mapErr: <A>(cb: (arg: Err) => A) => Result<Ok, A>
+  chain: <A>(cb: (arg: Ok) => A) => A
+  chainErr: <A>(cb: (arg: Err) => A) => A
+  swap: () => Result<Ok, Err>
+  bimap: <A, B>(ok: (arg: Ok) => A, err: (arg: Err) => B) => Result<A, B>
+  cata: <A, B>(obj: {
+    Ok: (arg: Ok) => A
+    Err: (arg: Err) => B
+  }) => A|B
+  inspect: () => string
+  isErr: () => boolean
+  isOk: () => boolean
 }
 
 export type Nothing = Maybe<any>
@@ -23,3 +40,7 @@ export function get<A>(selector: (String|Number)[]): (data: any) => Maybe<A>
 export function tryFind<A>(selector: any[]): (data: A[]) => Maybe<A>
 export function justs<A>(arr: any[]): Maybe<A>[]
 export function encase<A>(throwableFunc: () => A): Maybe<A>
+export function encaseRes<A>(throwableFunc: () => A): Result<A, A>
+export function Ok<A>(arg: A): Result<A, A>
+export function Err<A>(arg: A): Result<A, A>
+export function oks<A>(arr: any[]): Result<A, A>[]
