@@ -1,0 +1,20 @@
+{
+  "name": "pratica-example",
+  "version": "1.0.0",
+  "description": "Pratica real world example",
+  "author": "Jason Rametta",
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts": {
+    "dev": "./node_modules/.bin/webpack --config webpack.config.js --mode=development --watch",
+    "build": "./node_modules/.bin/webpack --config webpack.config.js --mode=production",
+    "deploy": "yarn build && surge -d pratica-example.surge.sh -p src"
+  },
+  "dependencies": {
+    "pratica": "^1.4.13"
+  },
+  "devDependencies": {
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  }
+}

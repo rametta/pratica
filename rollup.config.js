@@ -5,7 +5,7 @@ export default {
   input: 'src/**/*.js',
   output: {
     name: 'pratica',
-    format: 'umd',
+    format: 'esm',
     file: 'dist/index.js'
   },
   plugins: [
