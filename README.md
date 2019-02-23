@@ -1,7 +1,7 @@
 [![npm](https://img.shields.io/npm/v/pratica.svg)](http://npm.im/pratica)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/rametta/pratica/)
+[![Pratica](https://badgen.net/bundlephobia/minzip/pratica)](https://bundlephobia.com/result?p=pratica)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)](http://makeapullrequest.com)
 
 # 🥃 Pratica
 
