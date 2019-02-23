@@ -2011,10 +2011,10 @@ posix-character-classes@^0.1.0:
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
   integrity sha1-AerA/jta9xoqbAL+q7jB/vfgDqs=
 
-pratica@^1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/pratica/-/pratica-1.4.7.tgz#e0a0c0e626b5df1d5c40217d989724bf7f784391"
-  integrity sha512-FwajhgIEImLg0unw1T84b8hvrIhqHEeL5qMQmeyRJp+dJ+XvXkKjF7pSHUYXFxFS0jK4LR1CgHrH/OntTynRlQ==
+pratica@^1.4.13:
+  version "1.4.13"
+  resolved "https://registry.yarnpkg.com/pratica/-/pratica-1.4.13.tgz#1f80ef64eb8949e2a7853904418acc67e4193af3"
+  integrity sha512-YVE9OHgrDtkHoIKFNcepyCDK4wUJ2vAWv1CH/Kqu3CwpJh1WtDN6EYuOjgeqL1pNzZezncpZJpyJZgaoCNub3Q==
 
 process-nextick-args@~2.0.0:
   version "2.0.0"

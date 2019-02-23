@@ -1,12 +1,14 @@
 {
   "name": "pratica",
-  "version": "1.4.7",
+  "module": "pratica",
+  "version": "1.4.13",
   "description": "Functional Programming for Pragmatists",
-  "main": "dist/",
+  "main": "dist/index.js",
   "types": "index.d.ts",
   "author": "Jason Rametta",
   "license": "Apache-2.0",
   "private": false,
+  "sideEffects": false,
   "scripts": {
     "deploy": "yarn build && yarn publish",
     "test": "jest --watch",

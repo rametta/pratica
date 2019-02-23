@@ -11,7 +11,7 @@
     "deploy": "yarn build && surge -d pratica-example.surge.sh -p src"
   },
   "dependencies": {
-    "pratica": "^1.4.7"
+    "pratica": "^1.4.13"
   },
   "devDependencies": {
     "webpack": "^4.29.5",
