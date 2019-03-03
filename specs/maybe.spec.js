@@ -1,4 +1,4 @@
-const { Maybe } = require('./../src/maybe')
+import { Maybe } from './../src/maybe'
 
 describe('Maybe', () => {
 
@@ -15,11 +15,22 @@ describe('Maybe', () => {
     expect(Maybe('some data').isJust()).toEqual(true)
   })
 
-  it('should implment chain', () => {
+  it('should implement chain', done => {
     Maybe('hello')
       .chain(x => Maybe(x))
       .map(x => x + ' world')
-      .map(x => expect(x).toEqual('hello world'))
+      .cata({
+        Just: x => expect(x).toBe('hello world'),
+        Nothing: done.fail
+      })
+
+    Maybe(null)
+      .chain(x => Maybe(x))
+      .map(x => x + ' world')
+      .cata({
+        Just: done.fail,
+        Nothing: done
+      })
 
     const x = Maybe('hello')
       .chain(x => Maybe(null))
@@ -28,6 +39,7 @@ describe('Maybe', () => {
 
     expect(x.isNothing()).toBe(true)
     expect(x.isJust()).toBe(false)
+    done()
   })
 
   it('should implement cata', done => {

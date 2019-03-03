@@ -12,8 +12,13 @@
 Pratica sacrifices some common FP guidelines in order to provide a simpler and more approachable API that can be used to accomplish your goals quickly - while maintaining data integrity and saftey, through algrebraic data types.
 
 ## Install
+With yarn
 ```sh
 yarn add pratica
+```
+or if you prefer npm
+```sh
+npm i pratica
 ```
 
 ## Documentation
@@ -21,7 +26,26 @@ yarn add pratica
 Table of Contents
   - [Monads](#monads)
     + [Maybe](#maybe)
+      + [.map](#maybe.map)
+      + [.chain](#maybe.chain)
+      + [.ap](#maybe.ap)
+      + [.default](#maybe.default)
+      + [.cata](#maybe.cata)
+      + [.inspect](#maybe.inspect)
+      + [.isNothing](#maybe.isnothing)
+      + [.isJust](#maybe.isjust)
     + [Result](#result)
+      + .ap
+      + .map
+      + .mapErr
+      + .chain
+      + .chainErr
+      + .bimap
+      + .swap
+      + .cata
+      + .inspect
+      + .isNothing
+      + .isJust
   - [Utilities](#utilities)
     + [encase](#encase)
     + [encaseRes](#encaseRes)
@@ -40,8 +64,12 @@ Table of Contents
 
 Use this when dealing with nullable and unreliable data that needs actions performed upon.
 
-Maybe is great for making sure you do not cause runtime errors by accessing data that is not there because of unexpected nulls or undefineds
+Maybe is great for making sure you do not cause runtime errors by accessing data that is not there because of unexpected nulls or undefineds.
 
+Every Maybe can either be of type `Just` or `Nothing`. When the data is available, it is wrapped with `Just`, if the data is missing, it is `Nothing`. The examples below should clarify futher.
+
+##### Maybe.map
+Map is used for running a function on the data inside the Maybe. Map will only run the function if the Maybe type is `Just`. If it's Nothing, the map will [short circuit](https://en.wikipedia.org/wiki/Short-circuit_evaluation) and be skipped.
 ```js
 import { Maybe } from 'pratica'
 
@@ -56,39 +84,55 @@ Maybe(person)
     Nothing: () => console.log(`This function won't run`)
   })
 
-// Example with real data
-Maybe(null)
-  .chain(p => Maybe(p.age)) // maybe age might be null
-  .map(age => age + 5)
-  .cata({
-    Just: age => console.log(age), // this function won't run because the data is null
-    Nothing: () => console.log('This function runs')
-  })
-
 // Example with null data
 Maybe(null)
-  .map(p => p.age)
-  .map(age => age + 5)
+  .map(p => p.age) // Maybe type is Nothing, so this function is skipped
+  .map(age => age + 5) // Maybe type is Nothing, so this function is skipped
   .cata({
-    Just: age => console.log(age), // this function won't run because the data is null
-    Nothing: () => console.log('This function runs')
-  })
-
-// Example with default data
-Maybe(null)
-  .map(p => p.age)
-  .map(age => age + 5)
-  .default(() => 99) // the data is null so 99 is the default
-  .cata({
-    Just: age => console.log(age), // 99
-    Nothing: () => console.log(`This function won't run`)
+    Just: age => console.log(age), // Maybe type is Nothing, so this function is not run
+    Nothing: () => console.log('Could not get age from person') // This function runs because Maybe is Nothing
   })
 ```
 
-Sometime's working with Maybe can be reptitive to always call .map whenever needing to a apply a function to the contents of the Maybe. Here is an example using `.ap` to simplify this.
+##### Maybe.chain
+Chain is used when you want to return another Maybe when already inside a Maybe.
+```js
+import { Maybe } from 'pratica'
+
+const person = { name: 'Jason', age: 4 }
+
+Maybe(person)
+  .chain(p => Maybe(p.height)) // p.height does not exist so Maybe returns a Nothing type, any .map, .chain, or .ap after a Nothing will be short circuited
+  .map(height => height * 2.2) // this func won't even run because height is Nothing, so `undefined * 2.2` will never execute, preventing problems.
+  .cata({
+    Just: height => console.log(height), // this function won't run because the height is Nothing
+    Nothing: () => console.log('This person has no height')
+  })
+```
+
+##### Maybe.default
+Default is a clean way of making sure you always return a Just with some *default* data inside.
+```js
+import { Maybe } from 'pratica'
+
+// Example with default data
+Maybe(null)
+  .map(p => p.age) // won't run
+  .map(age => age + 5) // won't run
+  .default(() => 99) // the data is null so 99 is the default
+  .cata({
+    Just: age => console.log(age), // 99
+    Nothing: () => console.log(`This function won't run because .default always returns a Just`)
+  })
+```
+
+##### Maybe.ap
+Sometime's working with Maybe can be reptitive to always call `.map` whenever needing to a apply a function to the contents of the Maybe. Here is an example using `.ap` to simplify this.
 
 Goal of this example, to perform operations on data inside the Maybe, without unwrapping the data with `.map` or `.chain`
 ```js
+import { Maybe } from 'pratica'
+
 // Need something like this
 // Maybe(6) + Maybe(7) = Maybe(13)
 Maybe(x => y => x + y)
@@ -106,6 +150,71 @@ Maybe(null) // no function to apply
     Just: () => console.log(`This function won't run`),
     Nothing: () => console.log(`This function runs`)
   })
+```
+
+##### Maybe.inspect
+Inspect is used for seeing a string respresentation of the Maybe. It is used mostly for Node logging which will automatically call inspect() on objects that have it, but you can use it too for debugging if you like.
+```js
+import { Maybe } from 'pratica'
+
+const { log } = console
+
+log(Maybe(86).inspect()) // `Just(86)`
+log(Maybe('HELLO').inspect()) // `Just('HELLO')`
+log(Maybe(null).inspect()) // `Nothing`
+log(Maybe(undefined).inspect()) // `Nothing`
+```
+
+##### Maybe.cata
+Cata is used at the end of your chain of computations. It is used for getting the final data from the Maybe. You must pass an object to `.cata` with 2 properties, `Just` and `Nothing` *(capitalization matters)*, and both those properties must be a function. Those functions will run based on if the the computations above it return a Just or Nothing data type.
+
+Cata stands for catamorphism and in simple terms means that it extracts a value from inside any container.
+
+```js
+import { Just, Nothing } from 'pratica'
+
+const isOver6Feet = person => person.height > 6
+  ? Just(person.height)
+  : Nothing
+
+isOver6Feet({ height: 4.5 })
+  .map(h => h / 2.2)
+  .cata({
+    Just: h => console.log(h), // this function doesn't run
+    Nothing: () => console.log(`person is not over 6 feet`)
+  })
+```
+
+##### Maybe.isJust
+isJust returns a boolean representing the type of the Maybe. If the Maybe is a Just type then true is returned, if it's a Nothing, returns false.
+
+```js
+import { Just, Nothing } from 'pratica'
+
+const isOver6Feet = height => height > 6
+  ? Just(height)
+  : Nothing
+
+const { log } = console
+
+log(isOver6Feet(7).isJust()) // true
+log(isOver6Feet(4).isJust()) // false
+```
+
+##### Maybe.isNothing
+isNothing returns a boolean representing the type of the Maybe. If the Maybe is a Just type then false is returned, if it's a Nothing, returns true.
+
+```js
+import { Just, Nothing } from 'pratica'
+
+const isOver6Feet = height => height > 6
+  ? Just(height)
+  : Nothing
+
+const { log } = console
+
+log(isOver6Feet(7).isNothing()) // false
+log(isOver6Feet(4).isNothing()) // true
 ```
 
 #### Result
@@ -260,7 +369,7 @@ encase(throwableFunc).cata({
 ```
 
 #### encaseRes
-Safely run functions that may throw an error or crash. encase returns a Result type (so Ok or Err). Similar to `encase` but the Err returns the error message.
+Safely run functions that may throw an error or crash. encaseRes returns a Result type (so Ok or Err). Similar to `encase` but the Err returns the error message.
 ```js
 import { encaseRes } from 'pratica'
 

@@ -1,5 +1,4 @@
 import { Ok, Err } from './../src/result'
-import { disconnect } from 'cluster';
 
 describe('Result', () => {
 
