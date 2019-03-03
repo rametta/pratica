@@ -26,26 +26,26 @@ npm i pratica
 Table of Contents
   - [Monads](#monads)
     + [Maybe](#maybe)
-      + [.map](#maybe.map)
-      + [.chain](#maybe.chain)
-      + [.ap](#maybe.ap)
-      + [.default](#maybe.default)
-      + [.cata](#maybe.cata)
-      + [.inspect](#maybe.inspect)
-      + [.isNothing](#maybe.isnothing)
-      + [.isJust](#maybe.isjust)
+      + [.map](#maybemap)
+      + [.chain](#maybechain)
+      + [.ap](#maybeap)
+      + [.default](#maybedefault)
+      + [.cata](#maybecata)
+      + [.inspect](#maybeinspect)
+      + [.isNothing](#maybeisnothing)
+      + [.isJust](#maybeisjust)
     + [Result](#result)
-      + .ap
-      + .map
-      + .mapErr
-      + .chain
-      + .chainErr
-      + .bimap
-      + .swap
-      + .cata
-      + .inspect
-      + .isNothing
-      + .isJust
+      + [.ap](#resultap)
+      + [.map](#resultmap)
+      + [.mapErr](#resultmaperr)
+      + [.chain](#resultchain)
+      + [.chainErr](#resultchainerr)
+      + [.bimap](#resultbimap)
+      + [.swap](#resultswap)
+      + [.cata](#resultcata)
+      + [.inspect](#resultinspect)
+      + [.isErr](#resultiserr)
+      + [.isOk](#resultisok)
   - [Utilities](#utilities)
     + [encase](#encase)
     + [encaseRes](#encaseRes)
@@ -218,9 +218,9 @@ log(isOver6Feet(4).isNothing()) // true
 ```
 
 #### Result
-Use this when dealing with conditional logic. Often a replacment for if statements - or for simplifyinf complex logic trees. A Result can either be a `Ok` or an `Err` type.
+Use this when dealing with conditional logic. Often a replacment for if statements - or for simplifying complex logic trees. A Result can either be an `Ok` or an `Err` type.
 
-Example 1: Name check
+##### Result.map
 ```js
 import { Ok, Err } from 'pratica'
 
@@ -228,15 +228,17 @@ const person = { name: 'jason', age: 4 }
 
 Ok(person)
   .map(p => p.name)
-  .chain(name => name === 'jason' ? Ok(name) : Err('Name not jason'))
   .cata({
     Ok: name => console.log(name), // 'jason'
-    Err: msg => console.error(msg) // this func does not run, but if it did, it would be 'Name not jason'
+    Err: msg => console.error(msg) // this func does not run
   })
 ```
 
-Example 2: Many checks
+##### Result.chain
+
 ```js
+import { Ok, Err } from 'pratica'
+
 const person = { name: 'Jason', age: 4 }
 
 const isPerson = p => p.name && p.age
@@ -261,9 +263,10 @@ Ok(person)
   })
 ```
 
+##### Result.mapErr
+
 You can also modify errors that may return from any result before getting the final result, by using `.mapErr` or `.chainErr`.
 
-Example using `.mapErr`
 ```js
 import { Err } from 'pratica'
 
@@ -276,7 +279,7 @@ Err('Message:')
   })
 ```
 
-Example using `.chainErr`
+##### Result.chainErr
 ```js
 import { Err } from 'pratica'
 
@@ -289,6 +292,7 @@ Err('Message:')
   })
 ```
 
+##### Result.swap
 Use `.swap()` to convert an Err to an Ok, or an Ok to an Err.
 ```js
 import { ok } from 'pratica'
@@ -301,7 +305,8 @@ Ok('hello')
   })
 ```
 
-Use `.bimap()` for easily modifying an Ok or an Err
+##### Result.bimap
+Use `.bimap()` for easily modifying an Ok or an Err. Shorthand for providing both `.map` and `.mapErr`
 ```js
 import { ok } from 'pratica'
 
@@ -318,6 +323,85 @@ Err('hello')
     Ok: () => {},
     Err: x => expect(x).toBe('hello goodbye') // true
   })
+```
+
+##### Result.ap
+```js
+import { Ok } from 'pratica'
+
+// Need something like this
+// Ok(6) + Ok(7) = Ok(13)
+Ok(x => y => x + y)
+  .ap(Ok(6))
+  .ap(Ok(7))
+  .cata({
+    Ok: result => console.log(result), // 13
+    Err: () => console.log(`This function won't run`)
+  })
+
+Ok(null) // no function to apply
+  .ap(Ok(6))
+  .ap(Ok(7))
+  .cata({
+    Ok: () => console.log(`This function won't run`),
+    Err: () => console.log(`This function runs`)
+  })
+```
+
+##### Result.inspect
+```js
+import { Ok, Err } from 'pratica'
+
+const { log } = console
+
+log(Ok(86).inspect()) // `Ok(86)`
+log(Ok('HELLO').inspect()) // `Ok('HELLO')`
+log(Err('Something happened').inspect()) // `Err('Something happened')`
+log(Err(404).inspect()) // `Err(404)`
+```
+
+##### Result.cata
+```js
+import { Ok, Err } from 'pratica'
+
+const isOver6Feet = person => person.height > 6
+  ? Ok(person.height)
+  : Err('person is not over 6 feet')
+
+isOver6Feet({ height: 4.5 })
+  .map(h => h / 2.2)
+  .cata({
+    Ok: h => console.log(h), // this function doesn't run
+    Err: msg => console.log(msg) // `person is not over 6 feet`
+  })
+```
+
+##### Result.isOk
+```js
+import { Ok, Err } from 'pratica'
+
+const isOver6Feet = height => height > 6
+  ? Ok(height)
+  : Err('Shorty')
+
+const { log } = console
+
+log(isOver6Feet(7).isOk()) // true
+log(isOver6Feet(4).isOk()) // false
+```
+
+##### Result.isErr
+```js
+import { Ok, Err } from 'pratica'
+
+const isOver6Feet = height => height > 6
+  ? Ok(height)
+  : Err('Shorty')
+
+const { log } = console
+
+log(isOver6Feet(7).isErr()) // false
+log(isOver6Feet(4).isErr()) // true
 ```
 
 ### Utilities
