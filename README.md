@@ -295,7 +295,7 @@ Err('Message:')
 ##### Result.swap
 Use `.swap()` to convert an Err to an Ok, or an Ok to an Err.
 ```js
-import { ok } from 'pratica'
+import { Ok } from 'pratica'
 
 Ok('hello')
   .swap()
@@ -308,7 +308,7 @@ Ok('hello')
 ##### Result.bimap
 Use `.bimap()` for easily modifying an Ok or an Err. Shorthand for providing both `.map` and `.mapErr`
 ```js
-import { ok } from 'pratica'
+import { Ok } from 'pratica'
 
 Ok('hello')
   .bimap(x => x + ' world', x => x + ' goodbye')
