@@ -95,7 +95,8 @@ describe('utililties', () => {
       name: 'jason',
       children: [
         {
-          name: 'bob'
+          name: 'bob',
+          hasChild: false
         },
         {
           name: 'blanche',
@@ -116,6 +117,11 @@ describe('utililties', () => {
     get(['children', 7, 'children', 0, 'name'])(data).cata({
       Just: done.fail,
       Nothing: done
+    })
+
+    get(['children', 0, 'hasChild'])(data).cata({
+      Just: hasChild => expect(hasChild).toBe(false),
+      Nothing: done.fail
     })
 
     done()
