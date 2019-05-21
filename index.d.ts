@@ -29,7 +29,7 @@ type Result<Ok, Err> = {
   isOk: () => boolean
 }
 
-export type Nothing = Maybe<any>
+export const Nothing: Maybe<any>
 export function Maybe<A>(arg: A): Maybe<A>
 export function Just<A>(arg: A): Maybe<A>
 export function head<A>(arr: A[]): Maybe<A>
@@ -40,7 +40,7 @@ export function get<A>(selector: (String|Number)[]): (data: any) => Maybe<A>
 export function tryFind<A>(selector: any[]): (data: A[]) => Maybe<A>
 export function justs<A>(arr: any[]): Maybe<A>[]
 export function encase<A>(throwableFunc: () => A): Maybe<A>
-export function encaseRes<A>(throwableFunc: () => A): Result<A, A>
-export function Ok<A>(arg: A): Result<A, A>
-export function Err<A>(arg: A): Result<A, A>
+export function encaseRes<A, B>(throwableFunc: () => A): Result<A, B>
+export function Ok<A, B>(arg: A): Result<A, B>
+export function Err<A, B>(arg: B): Result<A, B>
 export function oks<A>(arr: any[]): Result<A, A>[]
