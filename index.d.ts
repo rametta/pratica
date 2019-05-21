@@ -30,7 +30,7 @@ type Result<Ok, Err> = {
 }
 
 export const Nothing: Maybe<any>
-export function Maybe<A>(arg: A): Maybe<A>
+export function Maybe<A>(arg: A): Maybe<NonNullable<A>>
 export function Just<A>(arg: A): Maybe<A>
 export function head<A>(arr: A[]): Maybe<A>
 export function tail<A>(arr: A[]): Maybe<A>
