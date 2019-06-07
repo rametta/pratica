@@ -1,7 +1,7 @@
 {
   "name": "pratica",
   "module": "pratica",
-  "version": "1.4.18",
+  "version": "1.5.0",
   "description": "Functional Programming for Pragmatists",
   "main": "dist/index.js",
   "types": "index.d.ts",
@@ -34,7 +34,6 @@
     "lightweight",
     "monads",
     "monoids",
-    "tasks",
     "fast",
     "easy"
   ]

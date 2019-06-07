@@ -1,3 +1,4 @@
+import { Just, Nothing } from './maybe'
 const isProperCata = obj => obj.Ok && obj.Err
 const improperCata = () => { throw new Error('Cata missing Ok or Err') }
 
@@ -12,6 +13,7 @@ export const Ok = arg => ({
   cata: obj => isProperCata(obj)
     ? obj.Ok(arg)
     : improperCata(),
+  toMaybe: () => Just(arg),
   inspect: () => `Ok(${arg})`,
   isErr: () => false,
   isOk: () => true
@@ -28,6 +30,7 @@ export const Err = arg => ({
   cata: obj => isProperCata(obj)
     ? obj.Err(arg)
     : improperCata(),
+  toMaybe: () => Nothing,
   inspect: () => `Err(${arg})`,
   isErr: () => true,
   isOk: () => false

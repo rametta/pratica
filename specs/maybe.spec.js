@@ -121,4 +121,22 @@ describe('Maybe', () => {
     done()
   })
 
+  it('should convert Maybe to Result', done => {
+    Maybe(6)
+      .toResult()
+      .cata({
+        Ok: x => expect(x).toBe(6),
+        Err: () => done.fail('Should not be Err')
+      })
+
+    Maybe()
+      .toResult()
+      .cata({
+        Ok: () => done.fail('Should not be Ok'),
+        Err: done
+      })
+
+    done()
+  })
+
 })

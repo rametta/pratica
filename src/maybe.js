@@ -1,5 +1,6 @@
+import { Ok, Err } from './result'
 const isProperCata = obj => obj.Just && obj.Nothing
-const improperCata = () => { throw new Error('Cata missing Just or Maybe') }
+const improperCata = () => { throw new Error('Cata missing Just or Nothing') }
 
 export const Just = arg => ({
   ap: cb => cb.map(x => arg(x)),
@@ -9,6 +10,7 @@ export const Just = arg => ({
   cata: obj => isProperCata(obj)
     ? obj.Just(arg)
     : improperCata(),
+  toResult: () => Ok(arg),
   inspect: () => `Just(${arg})`,
   isNothing: () => false,
   isJust: () => true
@@ -22,6 +24,7 @@ export const Nothing = ({
   cata: obj => isProperCata(obj)
     ? obj.Nothing()
     : improperCata(),
+  toResult: () => Err(),
   inspect: () => `Nothing`,
   isNothing: () => true,
   isJust: () => false

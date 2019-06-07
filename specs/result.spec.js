@@ -176,4 +176,22 @@ describe('Result', () => {
     done()
   })
 
+  it('should convert Result to Maybe', done => {
+    Ok(6)
+      .toMaybe()
+      .cata({
+        Just: x => expect(x).toBe(6),
+        Nothing: () => done.fail('Should not be Nothing')
+      })
+
+    Err()
+      .toMaybe()
+      .cata({
+        Just: () => done.fail('Should not be Just'),
+        Nothing: done
+      })
+
+    done()
+  })
+
 })

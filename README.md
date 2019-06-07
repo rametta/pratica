@@ -31,6 +31,7 @@ Table of Contents
       + [.ap](#maybeap)
       + [.default](#maybedefault)
       + [.cata](#maybecata)
+      + [.toResult](#maybetoresult)
       + [.inspect](#maybeinspect)
       + [.isNothing](#maybeisnothing)
       + [.isJust](#maybeisjust)
@@ -43,6 +44,7 @@ Table of Contents
       + [.bimap](#resultbimap)
       + [.swap](#resultswap)
       + [.cata](#resultcata)
+      + [.toMaybe](#resulttomaybe)
       + [.inspect](#resultinspect)
       + [.isErr](#resultiserr)
       + [.isOk](#resultisok)
@@ -182,6 +184,27 @@ isOver6Feet({ height: 4.5 })
   .cata({
     Just: h => console.log(h), // this function doesn't run
     Nothing: () => console.log(`person is not over 6 feet`)
+  })
+```
+
+##### Maybe.toResult
+toResult is used for easily converting Maybe's to Result's. Any Maybe that is a Just will be converted to an Ok with the same value inside, and any value that was Nothing will be converted to an Err with no value passed. The cata will have to include `Ok` and `Err` instead of `Just` and `Nothing`.
+
+```js
+import { Just, Nothing } from 'pratica'
+
+Just(8)
+  .toResult()
+  .cata({
+    Ok: n => console.log(n), // 8
+    Err: () => console.log(`No value`) // this function doesn't run
+  })
+
+Nothing
+  .toResult()
+  .cata({
+    Ok: n => console.log(n), // this function doesn't run
+    Err: () => console.log(`No value`) // this runs
   })
 ```
 
@@ -373,6 +396,27 @@ isOver6Feet({ height: 4.5 })
   .cata({
     Ok: h => console.log(h), // this function doesn't run
     Err: msg => console.log(msg) // `person is not over 6 feet`
+  })
+```
+
+##### Result.toMaybe
+toMaybe is used for easily converting Result's to Maybe's. Any Result that is an Ok will be converted to a Just with the same value inside, and any value that was Err will be converted to a Nothing with no value passed. The cata will have to include `Just` and `Nothing` instead of `Ok` and `Err`.
+
+```js
+import { Ok, Err } from 'pratica'
+
+Ok(8)
+  .toMaybe()
+  .cata({
+    Just: n => console.log(n), // 8
+    Nothing: () => console.log(`No value`) // this function doesn't run
+  })
+
+Err(8)
+  .toMaybe()
+  .cata({
+    Just: n => console.log(n), // this function doesn't run
+    Nothing: () => console.log(`No value`) // this runs
   })
 ```
 
