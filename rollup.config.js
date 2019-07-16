@@ -1,5 +1,6 @@
 import babel from 'rollup-plugin-babel'
 import multiEntry from "rollup-plugin-multi-entry"
+import cleanup from 'rollup-plugin-cleanup'
 
 export default {
   input: 'src/**/*.js',
@@ -10,6 +11,7 @@ export default {
   },
   plugins: [
     babel({ exclude: 'node_modules/**' }),
-    multiEntry()
+    multiEntry(),
+    cleanup()
   ],
 }
