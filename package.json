@@ -1,7 +1,7 @@
 {
   "name": "pratica",
   "module": "pratica",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Functional Programming for Pragmatists",
   "main": "dist/index.js",
   "types": "index.d.ts",
@@ -10,8 +10,9 @@
   "private": false,
   "sideEffects": false,
   "scripts": {
-    "deploy": "yarn build && yarn publish",
-    "test": "jest --watch",
+    "deploy": "rm -rf dist && yarn build && yarn publish",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "build": "./node_modules/.bin/rollup -c"
   },
   "devDependencies": {

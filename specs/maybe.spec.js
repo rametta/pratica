@@ -1,4 +1,4 @@
-import { Maybe } from './../src/maybe'
+import { Maybe, Just } from './../src/maybe'
 
 describe('Maybe', () => {
 
@@ -139,4 +139,14 @@ describe('Maybe', () => {
     done()
   })
 
+  it('should handle multiple map functions in a row', done => {
+    Just(1)
+      .map(x => x + 1, x => x + 2)
+      .cata({
+        Just: x => expect(x).toBe(4),
+        Nothing: () => done.fail('Should not be Nothing')
+      })
+
+    done()
+  })
 })

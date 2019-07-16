@@ -4,12 +4,12 @@ const improperCata = () => { throw new Error('Cata missing Ok or Err') }
 
 export const Ok = arg => ({
   ap: cb => cb.map(x => arg(x)),
-  map: cb => Ok(cb(arg)),
+  map: (...cbs) => Ok(cbs.reduce((acc, cb) => cb(acc), arg)),
   mapErr: () => Ok(arg),
   chain: cb => cb(arg),
   chainErr: () => Ok(arg),
   swap: () => Err(arg),
-  bimap: (ok, err) => Ok(ok(arg)),
+  bimap: (ok, _) => Ok(ok(arg)),
   cata: obj => isProperCata(obj)
     ? obj.Ok(arg)
     : improperCata(),
@@ -26,7 +26,7 @@ export const Err = arg => ({
   chain: () => Err(arg),
   chainErr: cb => cb(arg),
   swap: () => Ok(arg),
-  bimap: (ok, err) => Err(err(arg)),
+  bimap: (_, err) => Err(err(arg)),
   cata: obj => isProperCata(obj)
     ? obj.Err(arg)
     : improperCata(),

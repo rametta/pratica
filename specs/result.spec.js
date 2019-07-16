@@ -194,4 +194,15 @@ describe('Result', () => {
     done()
   })
 
+  it('should handle multiple map functions in a row', done => {
+    Ok(1)
+      .map(x => x + 1, x => x + 2)
+      .cata({
+        Ok: x => expect(x).toBe(4),
+        Err: () => done.fail('Should not be Err')
+      })
+
+    done()
+  })
+
 })
