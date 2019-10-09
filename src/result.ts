@@ -47,10 +47,3 @@ export const Err = <E>(arg?: E): Result<any, E> => ({
   isErr: () => true,
   isOk: () => false
 })
-
-const a = Err(6)
-  .map(() => '')
-  .cata({
-    Ok: o => o,
-    Err: e => e
-  })
