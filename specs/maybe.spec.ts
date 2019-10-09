@@ -1,39 +1,39 @@
-import { Maybe, Just } from './../src/maybe'
+import { nullable, Just } from '../src/maybe'
 
 describe('Maybe', () => {
 
   it('should be a functor and implement map', () => {
-    Maybe('hello')
+    nullable('hello')
       .map(x => `${x} world`)
       .map(x => expect(x).toEqual('hello world'))
   })
 
   it('should handle nullable data', () => {
-    expect(Maybe(null).isNothing()).toEqual(true)
-    expect(Maybe(null).isJust()).toEqual(false)
-    expect(Maybe('some data').isNothing()).toEqual(false)
-    expect(Maybe('some data').isJust()).toEqual(true)
+    expect(nullable(null).isNothing()).toEqual(true)
+    expect(nullable(null).isJust()).toEqual(false)
+    expect(nullable('some data').isNothing()).toEqual(false)
+    expect(nullable('some data').isJust()).toEqual(true)
   })
 
   it('should implement chain', done => {
-    Maybe('hello')
-      .chain(x => Maybe(x))
+    nullable('hello')
+      .chain(x => nullable(x))
       .map(x => x + ' world')
       .cata({
         Just: x => expect(x).toBe('hello world'),
-        Nothing: done.fail
+        Nothing: () => done.fail()
       })
 
-    Maybe(null)
-      .chain(x => Maybe(x))
+      nullable(null)
+      .chain(x => nullable(x))
       .map(x => x + ' world')
       .cata({
-        Just: done.fail,
+        Just: () => done.fail(),
         Nothing: done
       })
 
-    const x = Maybe('hello')
-      .chain(x => Maybe(null))
+    const x = nullable('hello')
+      .chain(x => nullable(null))
       .map(x => x + ' world')
       .map(x => expect(x).toEqual('hello world '))
 
@@ -43,35 +43,33 @@ describe('Maybe', () => {
   })
 
   it('should implement cata', done => {
-    Maybe('hello')
+    nullable('hello')
       .map(x => x + ' world')
       .cata({
         Just: x => expect(x).toBe('hello world'),
         Nothing: () => done.fail('Should not be Nothing')
       })
 
-    Maybe(null)
+      nullable(null)
       .map(() => done.fail())
       .chain(() => done.fail())
       .cata({
         Just: () => done.fail(),
         Nothing: () => done()
       })
-
-    expect(() => Maybe().cata({})).toThrow()
   })
 
   it('should return a default value if nothing', done => {
-    Maybe(null)
-      .default(() => 'some default')
+    nullable(null)
+      .alt('some default')
       .cata({
         Just: x => expect(x).toBe('some default'),
         Nothing: () => done.fail('Should not be Nothing')
       })
 
-    Maybe('some data')
-      .chain(data => Maybe(null))
-      .default(() => 'some default')
+      nullable('some data')
+      .chain(data => nullable(null))
+      .alt('some default')
       .cata({
         Just: x => expect(x).toBe('some default'),
         Nothing: () => done.fail('Should not be Nothing')
@@ -81,9 +79,9 @@ describe('Maybe', () => {
   })
 
   it(`should ignore the default if it's not nothing`, done => {
-    Maybe({ name: 'jason' })
+    nullable({ name: 'jason' })
       .map(person => person.name)
-      .default(() => 'some default')
+      .alt('some default')
       .cata({
         Just: x => expect(x).toBe('jason'),
         Nothing: () => done.fail('Should not be Nothing')
@@ -93,16 +91,16 @@ describe('Maybe', () => {
   })
 
   it('should inspect properly', () => {
-    expect(Maybe('hello').inspect()).toBe('Just(hello)')
-    expect(Maybe(null).inspect()).toBe('Nothing')
+    expect(nullable('hello').inspect()).toBe('Just(hello)')
+    expect(nullable(null).inspect()).toBe('Nothing')
   })
 
   it('should apply 2 monads with ap', done => {
-    const add = x => y => x + y
-    const one = Maybe(1)
-    const two = Maybe(2)
+    const add = (x: number) => (y: number) => x + y
+    const one = nullable(1)
+    const two = nullable(2)
 
-    Maybe(add)
+    nullable(add)
       .ap(one)
       .ap(two)
       .cata({
@@ -110,7 +108,7 @@ describe('Maybe', () => {
         Nothing: () => done.fail('Should not be Nothing')
       })
 
-    Maybe(null)
+      nullable(null)
       .ap(one)
       .ap(two)
       .cata({
@@ -122,29 +120,18 @@ describe('Maybe', () => {
   })
 
   it('should convert Maybe to Result', done => {
-    Maybe(6)
+    nullable(6)
       .toResult()
       .cata({
         Ok: x => expect(x).toBe(6),
         Err: () => done.fail('Should not be Err')
       })
 
-    Maybe()
+    nullable()
       .toResult()
       .cata({
         Ok: () => done.fail('Should not be Ok'),
         Err: done
-      })
-
-    done()
-  })
-
-  it('should handle multiple map functions in a row', done => {
-    Just(1)
-      .map(x => x + 1, x => x + 2)
-      .cata({
-        Just: x => expect(x).toBe(4),
-        Nothing: () => done.fail('Should not be Nothing')
       })
 
     done()

@@ -1,4 +1,4 @@
-import { Ok, Err } from './../src/result'
+import { Ok, Err } from '../src/result'
 
 describe('Result', () => {
 
@@ -6,7 +6,7 @@ describe('Result', () => {
 
   it('should have map', done => {
     Ok(person)
-      .map(p => p.name)
+      .map(p => p && p.name)
       .cata({
         Ok: name => expect(name).toBe('jason'),
         Err: done.fail
@@ -17,7 +17,7 @@ describe('Result', () => {
 
   it('should have chain', done => {
     Ok(person)
-      .map(p => p.name)
+      .map(p => p && p.name)
       .chain(name => name === 'jason' ? Ok(name) : Err('Name not jason'))
       .cata({
         Ok: name => expect(name).toBe('jason'),
@@ -25,7 +25,7 @@ describe('Result', () => {
       })
 
     Ok(person)
-      .map(p => p.name)
+      .map(p => p && p.name)
       .chain(name => name !== 'jason' ? Ok(name) : Err('Name is jason'))
       .cata({
         Ok: done.fail,
@@ -36,7 +36,7 @@ describe('Result', () => {
   })
 
   it('should have ap', done => {
-    const add = x => y => x + y
+    const add = (x: number) => (y: number) => x + y
     const one = Ok(1)
     const two = Ok(2)
 
@@ -189,17 +189,6 @@ describe('Result', () => {
       .cata({
         Just: () => done.fail('Should not be Just'),
         Nothing: done
-      })
-
-    done()
-  })
-
-  it('should handle multiple map functions in a row', done => {
-    Ok(1)
-      .map(x => x + 1, x => x + 2)
-      .cata({
-        Ok: x => expect(x).toBe(4),
-        Err: () => done.fail('Should not be Err')
       })
 
     done()

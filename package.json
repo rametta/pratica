@@ -4,7 +4,7 @@
   "version": "1.6.1",
   "description": "Functional Programming for Pragmatists",
   "main": "dist/index.js",
-  "types": "index.d.ts",
+  "types": "dist/index.d.ts",
   "author": "Jason Rametta",
   "license": "Apache-2.0",
   "private": false,
@@ -13,18 +13,22 @@
     "deploy": "rm -rf dist && yarn build && yarn publish",
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "./node_modules/.bin/rollup -c"
+    "build": "./node_modules/.bin/rollup -c",
+    "build:ts": "tsc --declaration"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
-    "@types/jest": "^24.0.3",
-    "jest": "^24.1.0",
+    "@types/jest": "^24.0.18",
+    "jest": "^24.9.0",
     "rollup": "^1.1.2",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-cleanup": "^3.1.1",
-    "rollup-plugin-multi-entry": "^2.1.0"
+    "rollup-plugin-multi-entry": "^2.1.0",
+    "rollup-plugin-typescript2": "^0.24.3",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.3"
   },
   "repository": "https://github.com/rametta/pratica.git",
   "bugs": {
@@ -37,6 +41,7 @@
     "monads",
     "monoids",
     "fast",
-    "easy"
+    "easy",
+    "typescript"
   ]
 }

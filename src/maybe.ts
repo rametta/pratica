@@ -1,3 +1,5 @@
+import { Result, Ok, Err } from './result'
+
 export type Maybe<A> = {
   ap: <B>(m: Maybe<any>) => Maybe<B>
   map: <B>(cb: (arg: A) => B) => Maybe<B>
@@ -7,6 +9,7 @@ export type Maybe<A> = {
     Just: (arg: A) => B
     Nothing: () => C
   }) => B|C
+  toResult: () => Result<any, any>
   inspect: () => string
   isNothing: () => boolean
   isJust: () => boolean
@@ -18,6 +21,7 @@ export const Just = <A>(arg: A): Maybe<A> => ({
   chain: <B>(cb: (a: A) => Maybe<B>): Maybe<B> => cb(arg),
   alt: () => Just(arg),
   cata: obj => obj.Just(arg),
+  toResult: () => Ok(arg),
   inspect: () => `Just(${arg})`,
   isNothing: () => false,
   isJust: () => true
@@ -29,6 +33,7 @@ export const Nothing: Maybe<any> = ({
   chain: (): Maybe<any> => Nothing,
   alt: a => Just(a),
   cata: obj => obj.Nothing(),
+  toResult: () => Err(),
   inspect: () => `Nothing`,
   isNothing: () => true,
   isJust: () => false
