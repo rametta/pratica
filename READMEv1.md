@@ -1,7 +1,6 @@
-[![npm](https://img.shields.io/npm/v/pratica.svg)](http://npm.im/pratica)
-[![Pratica](https://badgen.net/bundlephobia/minzip/pratica)](https://bundlephobia.com/result?p=pratica)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)](http://makeapullrequest.com)
+## :warning: VERSION 1.6.x Docs
+
+You are looking at the Pratica V1 docs. For the latest V2 docs, check out [README.md](README.md)
 
 # 🥃 Pratica
 
@@ -29,7 +28,7 @@ Table of Contents
       + [.map](#maybemap)
       + [.chain](#maybechain)
       + [.ap](#maybeap)
-      + [.alt](#maybealt)
+      + [.default](#maybedefault)
       + [.cata](#maybecata)
       + [.toResult](#maybetoresult)
       + [.inspect](#maybeinspect)
@@ -60,15 +59,6 @@ Table of Contents
     + [tryFind](#tryfind)
     + [parseDate](#parsedate)
 
-### Changes from V1 to V2
-
-If you are migrating from Pratica V1 to V2. Here is a small list of changes made:
-
-- `Maybe()` utility was renamed to `nullable()`
-- `.default(() => 'value')` was renamed to `.alt('value')` and does not require a function to be passed in, just a value.
-
-That's it. Enjoy.
-
 ### Monads
 
 #### Maybe
@@ -82,12 +72,12 @@ Every Maybe can either be of type `Just` or `Nothing`. When the data is availabl
 ##### Maybe.map
 Map is used for running a function on the data inside the Maybe. Map will only run the function if the Maybe type is `Just`. If it's Nothing, the map will [short circuit](https://en.wikipedia.org/wiki/Short-circuit_evaluation) and be skipped.
 ```js
-import { nullable } from 'pratica'
+import { Maybe } from 'pratica'
 
 const person = { name: 'Jason', age: 4 }
 
 // Example with real data
-nullable(person)
+Maybe(person)
   .map(p => p.age)
   .map(age => age + 5)
   .cata({
@@ -96,7 +86,7 @@ nullable(person)
   })
 
 // Example with null data
-nullable(null)
+Maybe(null)
   .map(p => p.age) // Maybe type is Nothing, so this function is skipped
   .map(age => age + 5) // Maybe type is Nothing, so this function is skipped
   .cata({
@@ -108,12 +98,12 @@ nullable(null)
 ##### Maybe.chain
 Chain is used when you want to return another Maybe when already inside a Maybe.
 ```js
-import { nullable } from 'pratica'
+import { Maybe } from 'pratica'
 
 const person = { name: 'Jason', age: 4 }
 
-nullable(person)
-  .chain(p => nullable(p.height)) // p.height does not exist so nullable returns a Nothing type, any .map, .chain, or .ap after a Nothing will be short circuited
+Maybe(person)
+  .chain(p => Maybe(p.height)) // p.height does not exist so Maybe returns a Nothing type, any .map, .chain, or .ap after a Nothing will be short circuited
   .map(height => height * 2.2) // this func won't even run because height is Nothing, so `undefined * 2.2` will never execute, preventing problems.
   .cata({
     Just: height => console.log(height), // this function won't run because the height is Nothing
@@ -121,19 +111,19 @@ nullable(person)
   })
 ```
 
-##### Maybe.alt
-Alt is a clean way of making sure you always return a Just with some *default* data inside.
+##### Maybe.default
+Default is a clean way of making sure you always return a Just with some *default* data inside.
 ```js
-import { nullable } from 'pratica'
+import { Maybe } from 'pratica'
 
 // Example with default data
-nullable(null)
+Maybe(null)
   .map(p => p.age) // won't run
   .map(age => age + 5) // won't run
-  .alt(99) // the data is null so 99 is the default
+  .default(() => 99) // the data is null so 99 is the default
   .cata({
     Just: age => console.log(age), // 99
-    Nothing: () => console.log(`This function won't run because .alt() always returns a Just`)
+    Nothing: () => console.log(`This function won't run because .default always returns a Just`)
   })
 ```
 
@@ -142,21 +132,21 @@ Sometime's working with Maybe can be reptitive to always call `.map` whenever ne
 
 Goal of this example, to perform operations on data inside the Maybe, without unwrapping the data with `.map` or `.chain`
 ```js
-import { Just, nullable } from 'pratica'
+import { Maybe } from 'pratica'
 
 // Need something like this
-// Just(6) + Just(7) = Just(13)
-Just(x => y => x + y)
-  .ap(Just(6))
-  .ap(Just(7))
+// Maybe(6) + Maybe(7) = Maybe(13)
+Maybe(x => y => x + y)
+  .ap(Maybe(6))
+  .ap(Maybe(7))
   .cata({
     Just: result => console.log(result), // 13
     Nothing: () => console.log(`This function won't run`)
   })
 
-nullable(null) // no function to apply
-  .ap(Just(6))
-  .ap(Just(7))
+Maybe(null) // no function to apply
+  .ap(Maybe(6))
+  .ap(Maybe(7))
   .cata({
     Just: () => console.log(`This function won't run`),
     Nothing: () => console.log(`This function runs`)
@@ -166,14 +156,14 @@ nullable(null) // no function to apply
 ##### Maybe.inspect
 Inspect is used for seeing a string respresentation of the Maybe. It is used mostly for Node logging which will automatically call inspect() on objects that have it, but you can use it too for debugging if you like.
 ```js
-import { nullable } from 'pratica'
+import { Maybe } from 'pratica'
 
 const { log } = console
 
-log(nullable(86).inspect()) // `Just(86)`
-log(nullable('HELLO').inspect()) // `Just('HELLO')`
-log(nullable(null).inspect()) // `Nothing`
-log(nullable(undefined).inspect()) // `Nothing`
+log(Maybe(86).inspect()) // `Just(86)`
+log(Maybe('HELLO').inspect()) // `Just('HELLO')`
+log(Maybe(null).inspect()) // `Nothing`
+log(Maybe(undefined).inspect()) // `Nothing`
 ```
 
 ##### Maybe.cata
