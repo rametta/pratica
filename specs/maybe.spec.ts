@@ -1,4 +1,4 @@
-import { nullable, Just } from '../src/maybe'
+import { nullable } from '../src/maybe'
 
 describe('Maybe', () => {
 

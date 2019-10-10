@@ -1,4 +1,3 @@
-import babel from 'rollup-plugin-babel'
 import multiEntry from 'rollup-plugin-multi-entry'
 import typescript from 'rollup-plugin-typescript2'
 import cleanup from 'rollup-plugin-cleanup'
@@ -11,9 +10,9 @@ export default {
     file: 'dist/index.js'
   },
   plugins: [
-    babel({ exclude: 'node_modules/**' }),
     typescript({
-      typescript: require('typescript')
+      typescript: require('typescript'),
+      tsconfig: './tsconfig.build.json'
     }),
     multiEntry(),
     cleanup()
