@@ -11,6 +11,8 @@
 
 Pratica sacrifices some common FP guidelines in order to provide a simpler and more approachable API that can be used to accomplish your goals quickly - while maintaining data integrity and saftey, through algrebraic data types.
 
+For V1 docs - check out [v1 docs readme](READMEv1.md)
+
 ## Install
 With yarn
 ```sh
