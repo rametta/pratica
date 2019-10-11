@@ -1,7 +1,7 @@
 {
   "name": "pratica",
   "module": "pratica",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Functional Programming for Pragmatists",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,12 +12,16 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "rm -rf dist && tsc src/index.ts --strict -t es5 --lib esnext -d --outDir dist",
+    "build:tsd": "rm -rf dist && tsc src/index.ts --emitDeclarationOnly -d --outDir dist",
+    "rollup": "./node_modules/.bin/rollup -c",
+    "build": "yarn build:tsd && yarn rollup",
     "deploy": "yarn build && yarn publish"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "jest": "^24.9.0",
+    "rollup": "^1.23.1",
+    "rollup-plugin-typescript2": "^0.24.3",
     "ts-jest": "^24.1.0",
     "typescript": "^3.6.3"
   },
