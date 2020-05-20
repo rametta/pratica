@@ -13,7 +13,7 @@ export type Maybe<A> = {
   inspect: () => string
   isNothing: () => boolean
   isJust: () => boolean,
-  get: () => A | undefined
+  value: () => A | undefined
 }
 
 export const Just = <A>(arg: A): Maybe<A> => ({
@@ -26,7 +26,7 @@ export const Just = <A>(arg: A): Maybe<A> => ({
   inspect: () => `Just(${arg})`,
   isNothing: () => false,
   isJust: () => true,
-  get: () => arg === null || arg === undefined ? undefined : arg
+  value: () => arg === null || arg === undefined ? undefined : arg
 })
 
 export const Nothing: Maybe<any> = ({
@@ -39,7 +39,7 @@ export const Nothing: Maybe<any> = ({
   inspect: () => `Nothing`,
   isNothing: () => true,
   isJust: () => false,
-  get: () => undefined
+  value: () => undefined
 })
 
 export const nullable = <T>(arg?: T): Maybe<NonNullable<T>> =>

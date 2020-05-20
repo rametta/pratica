@@ -251,8 +251,8 @@ log(isOver6Feet(7).isNothing()) // false
 log(isOver6Feet(4).isNothing()) // true
 ```
 
-##### Maybe.get
-get returns the encapsulated value within the Maybe. If the Maybe is a Just type, then the `arg` is returned, otherwise, if it is a Nothing, then it returns undefined.
+##### Maybe.value
+value returns the encapsulated value within the Maybe. If the Maybe is a Just type, then the `arg` is returned, otherwise, if it is a Nothing, then it returns undefined.
 
 ```js
 import { Just, Nothing } from 'pratica'
@@ -263,8 +263,8 @@ const isOver6Feet = height => height > 6
 
 const { log } = console
 
-log(isOver6Feet(7).get()) // 7
-log(isOver6Feet(4).get()) // undefined
+log(isOver6Feet(7).value()) // 7
+log(isOver6Feet(4).value()) // undefined
 ```
 
 #### Result
