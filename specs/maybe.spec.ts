@@ -136,4 +136,10 @@ describe('Maybe', () => {
 
     done()
   })
+
+  it('should get inner value', () => {
+    expect(nullable(6).get()).toBe(6)
+    expect(nullable(null).get()).toBe(undefined)
+    expect(nullable({ foo: 'bar' }).map(v => v.foo).get()).toBe('bar')
+  })
 })
