@@ -26,7 +26,7 @@ export const Just = <A>(arg: A): Maybe<A> => ({
   inspect: () => `Just(${arg})`,
   isNothing: () => false,
   isJust: () => true,
-  value: () => arg === null || arg === undefined ? undefined : arg
+  value: () => arg
 })
 
 export const Nothing: Maybe<any> = ({
