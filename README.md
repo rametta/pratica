@@ -251,6 +251,22 @@ log(isOver6Feet(7).isNothing()) // false
 log(isOver6Feet(4).isNothing()) // true
 ```
 
+##### Maybe.value
+value returns the encapsulated value within the Maybe. If the Maybe is a Just type, then the `arg` is returned, otherwise, if it is a Nothing, then it returns undefined.
+
+```js
+import { Just, Nothing } from 'pratica'
+
+const isOver6Feet = height => height > 6
+  ? Just(height)
+  : Nothing
+
+const { log } = console
+
+log(isOver6Feet(7).value()) // 7
+log(isOver6Feet(4).value()) // undefined
+```
+
 #### Result
 Use this when dealing with conditional logic. Often a replacment for if statements - or for simplifying complex logic trees. A Result can either be an `Ok` or an `Err` type.
 
