@@ -18,7 +18,7 @@ export type Maybe<A> = {
 
 export const Just = <A>(arg: A): Maybe<A> => ({
   ap: <B>(m: Maybe<B>): Maybe<B> => typeof arg === 'function' ? m.map(v => arg(v)) : Nothing,
-  map: <B>(cb: (a: A) => B): Maybe<B> => Just(cb(arg)),
+  map: <B>(cb: (a: A) => B): Maybe<B> => nullable(cb(arg)),
   chain: <B>(cb: (a: A) => Maybe<B>): Maybe<B> => cb(arg),
   alt: () => Just(arg),
   cata: obj => obj.Just(arg),

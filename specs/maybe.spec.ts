@@ -142,4 +142,10 @@ describe('Maybe', () => {
     expect(nullable(null).value()).toBe(undefined)
     expect(nullable({ foo: 'bar' }).map(v => v.foo).value()).toBe('bar')
   })
+
+  it('should return Nothing is cb return null value', () => {
+    expect(nullable(null).map(() => null).value()).toBe(undefined)
+    expect(nullable({ foo: 'bar' }).map(() => null).value()).toBe(undefined)
+    expect(nullable({ foo: 'bar' }).map(() => null).isJust()).toBe(false)
+  })
 })
