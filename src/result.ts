@@ -18,11 +18,11 @@ export type Result<O, E> = {
   isOk: () => boolean
 }
 
-export const Ok = <O>(arg?: O): Result<O, any> => ({
+export const Ok = <O>(arg: O): Result<O, any> => ({
   ap: <A>(r: Result<A, any>) => typeof arg === 'function' ? r.map(x => arg(x)) : Err(),
-  map: <A>(cb: (a?: O) => A): Result<A, any> => Ok(cb(arg)),
+  map: <A>(cb: (a: O) => A): Result<A, any> => Ok(cb(arg)),
   mapErr: (): Result<O, any> => Ok(arg),
-  chain: <A>(cb: (a?: O) => Result<A, any>): Result<A, any> => cb(arg),
+  chain: <A>(cb: (a: O) => Result<A, any>): Result<A, any> => cb(arg),
   chainErr: () => Ok(arg),
   swap: () => Err(arg),
   bimap: (ok, _) => Ok(ok(arg)),
