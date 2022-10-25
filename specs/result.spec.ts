@@ -1,8 +1,9 @@
-import { Ok, Err } from '../src/result'
+import { Ok, Err, Result } from '../src/result'
 
 describe('Result', () => {
 
-  const person = { name: 'jason', age: 4 }
+  type Person = { name: string, age: number }
+  const person: Person = { name: 'jason', age: 4 }
 
   it('should have map', done => {
     Ok(person)
@@ -48,6 +49,28 @@ describe('Result', () => {
         Err: done.fail
       })
 
+    done()
+  })
+
+  it('should be instantiable without arguments', done => {
+    Ok()
+      .map(() => person)
+      .cata({
+        Ok: p => expect(p).toBe(person),
+        Err: done.fail
+      })
+    done()
+  })
+
+  it("when instantiated with a defined value, callbacks don't need to check against undefined", done => {
+
+    Ok(person)
+      .map((p: Person): string => p.name)
+      .chain((name: string): Result<string, string> => name === 'jason' ? Ok(name) : Err('Name not jason'))
+      .cata({
+        Ok: name => expect(name).toBe('jason'),
+        Err: done.fail
+      })
     done()
   })
 
