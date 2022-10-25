@@ -19,14 +19,14 @@ export type Result<O, E> = {
 }
 
 
-const innerOk = <O>(arg: O): Result<O, any> => ({
+const _Ok = <O>(arg: O): Result<O, any> => ({
   ap: <A>(r: Result<A, any>) => typeof arg === 'function' ? r.map(x => arg(x)) : Err(),
-  map: <A>(cb: (a: O) => A): Result<A, any> => innerOk(cb(arg)),
-  mapErr: (): Result<O, any> => innerOk(arg),
+  map: <A>(cb: (a: O) => A): Result<A, any> => _Ok(cb(arg)),
+  mapErr: (): Result<O, any> => _Ok(arg),
   chain: <A>(cb: (a: O) => Result<A, any>): Result<A, any> => cb(arg),
-  chainErr: () => innerOk(arg),
-  swap: () => innerErr(arg),
-  bimap: (ok, _) => innerOk(ok(arg)),
+  chainErr: () => _Ok(arg),
+  swap: () => _Err(arg),
+  bimap: (ok, _) => _Ok(ok(arg)),
   cata: obj => obj.Ok(arg),
   toMaybe: () => nullable(arg),
   inspect: () => `Ok(${arg})`,
@@ -34,14 +34,14 @@ const innerOk = <O>(arg: O): Result<O, any> => ({
   isOk: () => true
 })
 
-const innerErr = <E>(arg: E): Result<any, E> => ({
-  ap: () => innerErr(arg),
-  map: () => innerErr(arg),
-  mapErr: <A>(cb: (a: E) => A): Result<any, A> => innerErr(cb(arg)),
-  chain: () => innerErr(arg),
+const _Err = <E>(arg: E): Result<any, E> => ({
+  ap: () => _Err(arg),
+  map: () => _Err(arg),
+  mapErr: <A>(cb: (a: E) => A): Result<any, A> => _Err(cb(arg)),
+  chain: () => _Err(arg),
   chainErr: cb => cb(arg),
-  swap: () => innerOk(arg),
-  bimap: (_, err) => innerErr(err(arg)),
+  swap: () => _Ok(arg),
+  bimap: (_, err) => _Err(err(arg)),
   cata: obj => obj.Err(arg),
   toMaybe: () => Nothing,
   inspect: () => `Err(${arg})`,
@@ -52,11 +52,11 @@ const innerErr = <E>(arg: E): Result<any, E> => ({
 export function Ok(): Result<any, any>
 export function Ok<O>(arg: O): Result<O, any>
 export function Ok<O>(arg?: O): Result<O | undefined, any> {
-  return innerOk(arg)
+  return _Ok(arg)
 }
 
 export function Err(): Result<any, any>
 export function Err<E>(arg: E): Result<any, E>
 export function Err<E>(arg?: E): Result<any, E | undefined> {
-  return innerErr(arg)
+  return _Err(arg)
 }
