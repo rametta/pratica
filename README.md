@@ -50,6 +50,7 @@ Table of Contents
       + [.inspect](#resultinspect)
       + [.isErr](#resultiserr)
       + [.isOk](#resultisok)
+      + [.value](#resultvalue)
   - [Utilities](#utilities)
     + [encase](#encase)
     + [encaseRes](#encaseRes)
@@ -473,6 +474,18 @@ const { log } = console
 
 log(isOver6Feet(7).isErr()) // false
 log(isOver6Feet(4).isErr()) // true
+```
+
+##### Result.value
+
+```js
+import {Ok, Err } from 'pratica'
+
+const six = Ok(6).value()
+const error = Err(new Error("Test Error")).value()
+
+log(six) // 6
+log(error) // Error: Test Error...
 ```
 
 ### Utilities
