@@ -478,6 +478,7 @@ log(isOver6Feet(4).isErr()) // true
 ```
 
 ##### Result.value
+Returns either the value contained in the Ok, or the error in the Err
 
 ```js
 import { Ok, Err } from 'pratica'
