@@ -484,10 +484,10 @@ Returns either the value contained in the Ok, or the error in the Err
 import { Ok, Err } from 'pratica'
 
 const six = Ok(6).value()
-const error = Err(new Error("Test Error")).value()
+const error = Err('Something happened').value()
 
 log(six) // 6
-log(error) // Error: Test Error...
+log(error) // 'Something happened'
 ```
 
 ### Utilities
