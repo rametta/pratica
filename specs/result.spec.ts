@@ -217,4 +217,10 @@ describe('Result', () => {
     done()
   })
 
+  it('should return the value or error', () => {
+    expect(Ok(6).value()).toBe(6)
+
+    expect(Err(new Error("Test Error")).value()).toEqual(new Error("Test Error"))
+  });
+
 })
