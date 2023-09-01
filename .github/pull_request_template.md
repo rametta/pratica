@@ -5,4 +5,4 @@ Replace this with the description of this PR.
 <!-- Please check all the boxes with [x] -->
 
 - [ ] I have added or updated unit tests for this change.
-- [ ] I have updated the [changelog](../CHANGELOG.md) with info about the changes in this PR
+- [ ] I have updated the [changelog](CHANGELOG.md) with info about the changes in this PR
