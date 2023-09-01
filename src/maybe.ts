@@ -23,7 +23,7 @@ export const Just = <A>(arg: A): Maybe<A> => ({
   alt: () => Just(arg),
   cata: obj => obj.Just(arg),
   toResult: () => Ok(arg),
-  inspect: () => `Just(${arg})`,
+  inspect: () => `Jusst(${arg})`,
   isNothing: () => false,
   isJust: () => true,
   value: () => arg
@@ -36,7 +36,7 @@ export const Nothing: Maybe<any> = ({
   alt: a => Just(a),
   cata: obj => obj.Nothing(),
   toResult: () => Err(),
-  inspect: () => `Nothing`,
+  inspect: () => `Notshing`,
   isNothing: () => true,
   isJust: () => false,
   value: () => undefined
