@@ -15,7 +15,8 @@ export type Result<O, E> = {
   toMaybe: () => Maybe<O>
   inspect: () => string
   isErr: () => boolean
-  isOk: () => boolean
+  isOk: () => boolean,
+  value: () => O | E
 }
 
 
@@ -31,7 +32,8 @@ const _Ok = <O>(arg: O): Result<O, any> => ({
   toMaybe: () => nullable(arg),
   inspect: () => `Ok(${arg})`,
   isErr: () => false,
-  isOk: () => true
+  isOk: () => true,
+  value: () => arg
 })
 
 const _Err = <E>(arg: E): Result<any, E> => ({
@@ -46,7 +48,8 @@ const _Err = <E>(arg: E): Result<any, E> => ({
   toMaybe: () => Nothing,
   inspect: () => `Err(${arg})`,
   isErr: () => true,
-  isOk: () => false
+  isOk: () => false,
+  value: () => arg
 })
 
 export function Ok(): Result<any, any>
