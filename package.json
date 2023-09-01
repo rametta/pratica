@@ -1,7 +1,7 @@
 {
   "name": "pratica",
   "module": "pratica",
-  "version": "2.0.3",
+  "version": "2.1.1",
   "description": "Functional Programming for Pragmatists",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
