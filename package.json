@@ -1,6 +1,6 @@
 {
   "name": "pratica",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Functional Programming for Pragmatists",
   "main": "dist/index.cjs",
   "module": "dist/index.esm.js",

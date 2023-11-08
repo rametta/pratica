@@ -14,10 +14,19 @@ export type Result<O, E> = {
   }) => A | B
   toMaybe: () => Maybe<O>
   inspect: () => string
-  isErr: () => boolean
-  isOk: () => boolean,
-  value: () => O | E
-}
+  // @ts-expect-error TS complains but this does work, https://github.com/microsoft/TypeScript/issues/51948
+  isErr: () => this is {__type: "Err"}
+  // @ts-expect-error TS complains but this does work, https://github.com/microsoft/TypeScript/issues/51948
+  isOk: () => this is {__type: "Ok"}
+} & ({
+  /** @deprecated This is for type magic, do not use */
+  __type: "Ok";
+  value: () => O;
+} | {
+  /** @deprecated This is for type magic, do not use */
+   __type: "Err";
+  value: () => E;
+});
 
 
 const _Ok = <O>(arg: O): Result<O, any> => ({
@@ -33,7 +42,8 @@ const _Ok = <O>(arg: O): Result<O, any> => ({
   inspect: () => `Ok(${arg})`,
   isErr: () => false,
   isOk: () => true,
-  value: () => arg
+  value: () => arg,
+  __type: "Ok"
 })
 
 const _Err = <E>(arg: E): Result<any, E> => ({
@@ -49,7 +59,8 @@ const _Err = <E>(arg: E): Result<any, E> => ({
   inspect: () => `Err(${arg})`,
   isErr: () => true,
   isOk: () => false,
-  value: () => arg
+  value: () => arg,
+  __type: "Err"
 })
 
 export function Ok(): Result<any, any>
