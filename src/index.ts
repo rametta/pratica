@@ -9,5 +9,4 @@ export * from './parseDate'
 export * from './result'
 export * from './tail'
 export * from './tryFind'
-
-import './collect'
+export * from './collect'

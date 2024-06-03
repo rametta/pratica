@@ -62,8 +62,8 @@ Table of Contents
     + [tail](#tail)
     + [tryFind](#tryfind)
     + [parseDate](#parsedate)
-    + [Array\<Result\>.collect](#arrayresultcollect)
-    + [Array\<Maybe\>.collect](#arraymaybecollect)
+    + [collectResult](#collectResult)
+    + [collectMaybe](#collectMaybe)
 
 ### Changes from V1 to V2
 
@@ -693,48 +693,46 @@ tryFind(u => u.id === '123abc')(users)
   })
 ```
 
-#### Array\<Result\>\.collect
+#### collectResult
+
 Safely collect values from an array of results. Returns a result.
 
-Note that this requires `import 'pratica'` to extend the Array prototype.
-
 ```js
-import 'pratica'
+import {collectResult} from 'pratica'
 
 const all_good = [Ok(1), Ok(2), Ok(3)]
 const one_bad = [Ok(1), Err('Some error'), Ok(3)]
 
-all_good.collect()
+collectResult(all_good)
   .cata({
     Ok: x => expect(x).toEqual([1,2,3]), // true
     Err: () => 'no values' // doesn't run
   })
 
-one_bad.collect()
+collectResult(one_bad)
   .cata({
     Ok: x => x, // doesn't run
     Err: err => expect(err).toEqual('Some error') // true
   })
 ```
 
-#### Array\<Maybe\>\.collect
+#### collectMaybe
+
 Safely collect values from an array of maybes. Returns a maybe.
 
-Note that this requires `import 'pratica'` to extend the Array prototype.
-
 ```js
-import 'pratica'
+import {collectMaybe} from 'pratica'
 
 const all_good = [Just(1), Just(2), Just(3)]
 const one_bad = [Just(1), Nothing, Just(3)]
 
-all_good.collect()
+collectMaybe(all_good)
   .cata({
     Just: x => expect(x).toEqual([1,2,3]), // true
     Nothing: () => 'no values' // doesn't run
   })
 
-one_bad.collect()
+collectMaybe(one_bad)
   .cata({
     Just: x => x, // doesn't run
     Nothing: () => 'no values' // true
