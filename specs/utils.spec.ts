@@ -9,6 +9,7 @@ import { head } from '../src/head'
 import { last } from '../src/last'
 import { tail } from '../src/tail'
 import { tryFind } from '../src/tryFind'
+import '../src'
 
 describe('utililties', () => {
 
@@ -210,4 +211,51 @@ describe('utililties', () => {
     done()
   })
 
+  it('collect_result: should collect an array of Oks into an Ok with an array of values', done => {
+    const data = [Ok(5), Ok(2), Ok(3)]
+
+    data.collect()
+      .cata({
+        Ok: x => expect(x).toEqual([5,2,3]),
+        Err: () => done.fail()
+      })
+
+    done()
+  })
+
+  it('collect_result: should collect an array of Oks and Errs into an Err with an array of errors', done => {
+    const data = [Ok(5), Err('nope'), Ok(3)]
+
+    data.collect()
+      .cata({
+        Ok: () => done.fail(),
+        Err: x => expect(x).toEqual(['nope'])
+      })
+
+    done()
+  })
+
+  it('collect_maybe: should collect an array of Justs into a Just with an array of values', done => {
+    const data = [Just(5), Just(2), Just(3)]
+
+    data.collect()
+      .cata({
+        Just: x => expect(x).toEqual([5,2,3]),
+        Nothing: () => done.fail()
+      })
+
+    done()
+  })
+
+  it('collect_maybe: should return a Nothing if any Maybe is a Nothing', done => {
+    const data = [Just(5), Nothing, Just(3)]
+
+    data.collect()
+      .cata({
+        Just: () => done.fail(),
+        Nothing: () => done()
+      })
+
+    done()
+  })
 })
