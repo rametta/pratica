@@ -6,11 +6,10 @@ export const collectResult = <O, E>(results: Array<Result<O, E>>): Result<Array<
   const failures: Array<E> = []
 
   for (const result of results) {
-    if (result.isOk()) {
-      successes.push(result.value() as O)
-    } else {
-      failures.push(result.value() as E)
-    }
+    result.cata({
+      Ok: x => successes.push(x),
+      Err: x => failures.push(x)
+    })
   }
 
   if (failures.length > 0) {
