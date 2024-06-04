@@ -1,5 +1,5 @@
-import { Just, Nothing } from '../src/maybe'
-import { Ok, Err } from '../src/result'
+import { Just, Maybe, Nothing } from '../src/maybe'
+import { Ok, Err, Result } from '../src/result'
 import { parseDate } from '../src/parseDate'
 import { justs } from '../src/justs'
 import { oks } from '../src/oks'
@@ -235,6 +235,18 @@ describe('utililties', () => {
     done()
   })
 
+  it('collectResult: should collect an empty array into Ok([])', done => {
+    const data: Array<Result<any, any>> = []
+
+    collectResult(data)
+      .cata({
+        Ok: x => expect(x).toEqual([]),
+        Err: () => done.fail()
+      })
+
+    done()
+  })
+
   it('collectMaybe: should collect an array of Justs into a Just with an array of values', done => {
     const data = [Just(5), Just(2), Just(3)]
 
@@ -258,4 +270,16 @@ describe('utililties', () => {
 
     done()
   })
+})
+
+it('collectMaybe: should collect an empty array into Just([])', done => {
+  const data: Array<Maybe<any>> = []
+
+  collectMaybe(data)
+    .cata({
+      Just: x => expect(x).toEqual([]),
+      Nothing: () => done.fail()
+    })
+
+  done()
 })
