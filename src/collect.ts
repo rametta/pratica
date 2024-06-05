@@ -7,8 +7,8 @@ export const collectResult = <O, E>(results: Array<Result<O, E>>): Result<Array<
 
   for (const result of results) {
     result.cata({
-      Ok: x => successes.push(x),
-      Err: x => failures.push(x)
+      Ok: (x) => successes.push(x),
+      Err: (x) => failures.push(x),
     })
   }
 

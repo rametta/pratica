@@ -1,31 +1,22 @@
 {
   "name": "pratica",
-  "version": "2.3.0",
   "description": "Functional Programming for Pragmatists",
+  "version": "2.3.0",
+  "author": "Jason Rametta",
+  "repository": "https://github.com/rametta/pratica.git",
   "main": "dist/index.cjs",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
-  "author": "Jason Rametta",
-  "license": "Apache-2.0",
-  "private": false,
   "sideEffects": false,
-  "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "build:tsd": "rm -rf dist && tsc src/index.ts --emitDeclarationOnly -d --outDir dist",
-    "rollup": "./node_modules/.bin/rollup -c",
-    "build": "yarn build:tsd && yarn rollup",
-    "deploy": "yarn build && yarn publish"
-  },
+  "private": false,
+  "license": "Apache-2.0",
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "jest": "^24.9.0",
+    "prettier": "^3.3.1",
     "rollup": "^1.23.1",
     "rollup-plugin-typescript2": "^0.24.3",
-    "ts-jest": "^24.1.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "vitest": "^1.6.0"
   },
-  "repository": "https://github.com/rametta/pratica.git",
   "bugs": {
     "url": "https://github.com/rametta/pratica/issues"
   },
@@ -38,5 +29,14 @@
     "fast",
     "easy",
     "typescript"
-  ]
+  ],
+  "scripts": {
+    "test": "vitest",
+    "build:tsd": "rm -rf dist && tsc src/index.ts --emitDeclarationOnly -d --outDir dist",
+    "rollup": "rollup -c",
+    "build": "bun run build:tsd && bun run rollup",
+    "deploy": "bun run build && bun run publish",
+    "pretty": "prettier --check 'src/**/*.ts'",
+    "pretty-fix": "prettier --write 'src/**/*.ts'"
+  }
 }

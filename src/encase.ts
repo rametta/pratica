@@ -1,5 +1,5 @@
-import { Maybe, Just, Nothing } from './maybe'
-import { Result, Err, Ok } from './result'
+import { Maybe, Just, Nothing } from "./maybe"
+import { Result, Err, Ok } from "./result"
 
 export const encase = <A>(func: () => A): Maybe<A> => {
   try {
@@ -12,7 +12,7 @@ export const encase = <A>(func: () => A): Maybe<A> => {
 export const encaseRes = <A, E>(func: () => A): Result<A, E> => {
   try {
     return Ok<A>(func())
-  } catch(e) {
+  } catch (e) {
     return Err<E>(e)
   }
 }

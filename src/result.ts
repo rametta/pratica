@@ -1,4 +1,4 @@
-import { Maybe, nullable, Nothing } from './maybe'
+import { Maybe, nullable, Nothing } from "./maybe"
 
 export type Result<O, E> = {
   ap: <A>(r: Result<A, E>) => Result<A, E>
@@ -8,32 +8,28 @@ export type Result<O, E> = {
   chainErr: <A>(cb: (arg: E) => Result<O, A>) => Result<O, A>
   swap: () => Result<O, E>
   bimap: <A, B>(ok: (arg: O) => A, err: (arg: E) => B) => Result<A, B>
-  cata: <A, B>(obj: {
-    Ok: (arg: O) => A
-    Err: (arg: E) => B
-  }) => A | B
+  cata: <A, B>(obj: { Ok: (arg: O) => A; Err: (arg: E) => B }) => A | B
   toMaybe: () => Maybe<O>
   inspect: () => string
   isErr: () => boolean
-  isOk: () => boolean,
+  isOk: () => boolean
   value: () => O | E
 }
 
-
 const _Ok = <O>(arg: O): Result<O, any> => ({
-  ap: <A>(r: Result<A, any>) => typeof arg === 'function' ? r.map(x => arg(x)) : Err(),
+  ap: <A>(r: Result<A, any>) => (typeof arg === "function" ? r.map((x) => arg(x)) : Err()),
   map: <A>(cb: (a: O) => A): Result<A, any> => _Ok(cb(arg)),
   mapErr: (): Result<O, any> => _Ok(arg),
   chain: <A>(cb: (a: O) => Result<A, any>): Result<A, any> => cb(arg),
   chainErr: () => _Ok(arg),
   swap: () => _Err(arg),
   bimap: (ok, _) => _Ok(ok(arg)),
-  cata: obj => obj.Ok(arg),
+  cata: (obj) => obj.Ok(arg),
   toMaybe: () => nullable(arg),
   inspect: () => `Ok(${arg})`,
   isErr: () => false,
   isOk: () => true,
-  value: () => arg
+  value: () => arg,
 })
 
 const _Err = <E>(arg: E): Result<any, E> => ({
@@ -41,15 +37,15 @@ const _Err = <E>(arg: E): Result<any, E> => ({
   map: () => _Err(arg),
   mapErr: <A>(cb: (a: E) => A): Result<any, A> => _Err(cb(arg)),
   chain: () => _Err(arg),
-  chainErr: cb => cb(arg),
+  chainErr: (cb) => cb(arg),
   swap: () => _Ok(arg),
   bimap: (_, err) => _Err(err(arg)),
-  cata: obj => obj.Err(arg),
+  cata: (obj) => obj.Err(arg),
   toMaybe: () => Nothing,
   inspect: () => `Err(${arg})`,
   isErr: () => true,
   isOk: () => false,
-  value: () => arg
+  value: () => arg,
 })
 
 export function Ok(): Result<any, any>

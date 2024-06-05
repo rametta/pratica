@@ -1,145 +1,166 @@
-import { nullable } from '../src/maybe'
+import { describe, it, expect } from "vitest";
+import { nullable } from "../src/maybe";
 
-describe('Maybe', () => {
+describe("Maybe", () => {
+  it("should be a functor and implement map", () => {
+    nullable("hello")
+      .map((x) => `${x} world`)
+      .map((x) => expect(x).toEqual("hello world"));
+  });
 
-  it('should be a functor and implement map', () => {
-    nullable('hello')
-      .map(x => `${x} world`)
-      .map(x => expect(x).toEqual('hello world'))
-  })
+  it("should handle nullable data", () => {
+    expect(nullable(null).isNothing()).toEqual(true);
+    expect(nullable(null).isJust()).toEqual(false);
+    expect(nullable("some data").isNothing()).toEqual(false);
+    expect(nullable("some data").isJust()).toEqual(true);
+  });
 
-  it('should handle nullable data', () => {
-    expect(nullable(null).isNothing()).toEqual(true)
-    expect(nullable(null).isJust()).toEqual(false)
-    expect(nullable('some data').isNothing()).toEqual(false)
-    expect(nullable('some data').isJust()).toEqual(true)
-  })
-
-  it('should implement chain', done => {
-    nullable('hello')
-      .chain(x => nullable(x))
-      .map(x => x + ' world')
+  it("should implement chain", () => {
+    nullable("hello")
+      .chain((x) => nullable(x))
+      .map((x) => x + " world")
       .cata({
-        Just: x => expect(x).toBe('hello world'),
-        Nothing: () => done.fail()
-      })
+        Just: (x) => expect(x).toBe("hello world"),
+        Nothing: () => {
+          throw new Error();
+        },
+      });
 
-      nullable(null)
-      .chain(x => nullable(x))
-      .map(x => x + ' world')
-      .cata({
-        Just: () => done.fail(),
-        Nothing: done
-      })
-
-    const x = nullable('hello')
-      .chain(x => nullable(null))
-      .map(x => x + ' world')
-      .map(x => expect(x).toEqual('hello world '))
-
-    expect(x.isNothing()).toBe(true)
-    expect(x.isJust()).toBe(false)
-    done()
-  })
-
-  it('should implement cata', done => {
-    nullable('hello')
-      .map(x => x + ' world')
-      .cata({
-        Just: x => expect(x).toBe('hello world'),
-        Nothing: () => done.fail('Should not be Nothing')
-      })
-
-      nullable(null)
-      .map(() => done.fail())
-      .chain(() => done.fail())
-      .cata({
-        Just: () => done.fail(),
-        Nothing: () => done()
-      })
-  })
-
-  it('should return a default value if nothing', done => {
     nullable(null)
-      .alt('some default')
+      .chain((x) => nullable(x))
+      .map((x) => x + " world")
       .cata({
-        Just: x => expect(x).toBe('some default'),
-        Nothing: () => done.fail('Should not be Nothing')
-      })
+        Just: () => {
+          throw new Error();
+        },
+        Nothing: () => {},
+      });
 
-      nullable('some data')
-      .chain(data => nullable(null))
-      .alt('some default')
+    const x = nullable("hello")
+      .chain((x) => nullable(null))
+      .map((x) => x + " world")
+      .map((x) => expect(x).toEqual("hello world "));
+
+    expect(x.isNothing()).toBe(true);
+    expect(x.isJust()).toBe(false);
+  });
+
+  it("should implement cata", () => {
+    nullable("hello")
+      .map((x) => x + " world")
       .cata({
-        Just: x => expect(x).toBe('some default'),
-        Nothing: () => done.fail('Should not be Nothing')
+        Just: (x) => expect(x).toBe("hello world"),
+        Nothing: () => {
+          throw new Error();
+        },
+      });
+
+    nullable(null)
+      .map(() => {
+        throw new Error();
       })
-
-    done()
-  })
-
-  it(`should ignore the default if it's not nothing`, done => {
-    nullable({ name: 'jason' })
-      .map(person => person.name)
-      .alt('some default')
+      .chain(() => {
+        throw new Error();
+      })
       .cata({
-        Just: x => expect(x).toBe('jason'),
-        Nothing: () => done.fail('Should not be Nothing')
-      })
+        Just: () => {
+          throw new Error();
+        },
+        Nothing: () => {},
+      });
+  });
 
-    done()
-  })
+  it("should return a default value if nothing", () => {
+    nullable(null)
+      .alt("some default")
+      .cata({
+        Just: (x) => expect(x).toBe("some default"),
+        Nothing: () => {
+          throw new Error();
+        },
+      });
 
-  it('should inspect properly', () => {
-    expect(nullable('hello').inspect()).toBe('Just(hello)')
-    expect(nullable(null).inspect()).toBe('Nothing')
-  })
+    nullable("some data")
+      .chain((data) => nullable(null))
+      .alt("some default")
+      .cata({
+        Just: (x) => expect(x).toBe("some default"),
+        Nothing: () => {
+          throw new Error();
+        },
+      });
+  });
 
-  it('should apply 2 monads with ap', done => {
-    const add = (x: number) => (y: number) => x + y
-    const one = nullable(1)
-    const two = nullable(2)
+  it(`should ignore the default if it's not nothing`, () => {
+    nullable({ name: "jason" })
+      .map((person) => person.name)
+      .alt("some default")
+      .cata({
+        Just: (x) => expect(x).toBe("jason"),
+        Nothing: () => {
+          throw new Error();
+        },
+      });
+  });
+
+  it("should inspect properly", () => {
+    expect(nullable("hello").inspect()).toBe("Just(hello)");
+    expect(nullable(null).inspect()).toBe("Nothing");
+  });
+
+  it("should apply 2 monads with ap", () => {
+    const add = (x: number) => (y: number) => x + y;
+    const one = nullable(1);
+    const two = nullable(2);
 
     nullable(add)
       .ap(one)
       .ap(two)
       .cata({
-        Just: x => expect(x).toBe(3),
-        Nothing: () => done.fail('Should not be Nothing')
-      })
+        Just: (x) => expect(x).toBe(3),
+        Nothing: () => {
+          throw new Error();
+        },
+      });
 
-      nullable(null)
+    nullable(null)
       .ap(one)
       .ap(two)
       .cata({
-        Just: () => done.fail(),
-        Nothing: done
-      })
+        Just: () => {
+          throw new Error();
+        },
+        Nothing: () => {},
+      });
+  });
 
-    done()
-  })
-
-  it('should convert Maybe to Result', done => {
+  it("should convert Maybe to Result", (ctx) => {
     nullable(6)
       .toResult()
       .cata({
-        Ok: x => expect(x).toBe(6),
-        Err: () => done.fail('Should not be Err')
-      })
+        Ok: (x) => expect(x).toBe(6),
+        Err: () => {
+          throw new Error();
+        },
+      });
 
     nullable()
       .toResult()
       .cata({
-        Ok: () => done.fail('Should not be Ok'),
-        Err: done
-      })
+        Ok: () => {
+          throw new Error();
+        },
+        Err: () => {},
+      });
+  });
 
-    done()
-  })
-
-  it('should get inner value', () => {
-    expect(nullable(6).value()).toBe(6)
-    expect(nullable(null).value()).toBe(undefined)
-    expect(nullable({ foo: 'bar' }).map(v => v.foo).value()).toBe('bar')
-  })
-})
+  it("should get inner value", () => {
+    expect(nullable(6).value()).toBe(6);
+    expect(nullable(null).value()).toBe(undefined);
+    expect(
+      nullable({ foo: "bar" })
+        .map((v) => v.foo)
+        .value()
+    ).toBe("bar");
+  });
+});
