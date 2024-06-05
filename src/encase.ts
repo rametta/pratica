@@ -13,6 +13,6 @@ export const encaseRes = <A, E>(func: () => A): Result<A, E> => {
   try {
     return Ok<A>(func())
   } catch (e) {
-    return Err<E>(e)
+    return Err<E>(e as E)
   }
 }
