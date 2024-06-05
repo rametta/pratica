@@ -23,47 +23,6 @@ npm i pratica
 
 ## Documentation
 
-Table of Contents
-
-- [Monads](#monads)
-  - [Maybe](#maybe)
-    - [.map](#maybemap)
-    - [.chain](#maybechain)
-    - [.ap](#maybeap)
-    - [.alt](#maybealt)
-    - [.cata](#maybecata)
-    - [.toResult](#maybetoresult)
-    - [.inspect](#maybeinspect)
-    - [.isNothing](#maybeisnothing)
-    - [.isJust](#maybeisjust)
-  - [Result](#result)
-    - [.ap](#resultap)
-    - [.map](#resultmap)
-    - [.mapErr](#resultmaperr)
-    - [.chain](#resultchain)
-    - [.chainErr](#resultchainerr)
-    - [.bimap](#resultbimap)
-    - [.swap](#resultswap)
-    - [.cata](#resultcata)
-    - [.toMaybe](#resulttomaybe)
-    - [.inspect](#resultinspect)
-    - [.isErr](#resultiserr)
-    - [.isOk](#resultisok)
-    - [.value](#resultvalue)
-- [Utilities](#utilities)
-  - [encase](#encase)
-  - [encaseRes](#encaseRes)
-  - [justs](#justs)
-  - [oks](#oks)
-  - [get](#get)
-  - [head](#head)
-  - [last](#last)
-  - [tail](#tail)
-  - [tryFind](#tryfind)
-  - [parseDate](#parsedate)
-  - [collectResult](#collectResult)
-  - [collectMaybe](#collectMaybe)
-
 ### Monads
 
 #### Maybe
