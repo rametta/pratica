@@ -1,5 +1,5 @@
-import { Just, Nothing } from '../src/maybe'
-import { Ok, Err } from '../src/result'
+import { Just, Maybe, Nothing } from '../src/maybe'
+import { Ok, Err, Result } from '../src/result'
 import { parseDate } from '../src/parseDate'
 import { justs } from '../src/justs'
 import { oks } from '../src/oks'
@@ -9,6 +9,7 @@ import { head } from '../src/head'
 import { last } from '../src/last'
 import { tail } from '../src/tail'
 import { tryFind } from '../src/tryFind'
+import { collectResult, collectMaybe } from '../src/collect'
 
 describe('utililties', () => {
 
@@ -210,4 +211,75 @@ describe('utililties', () => {
     done()
   })
 
+  it('collectResult: should collect an array of Oks into an Ok with an array of values', done => {
+    const data = [Ok(5), Ok(2), Ok(3)]
+
+    collectResult(data)
+      .cata({
+        Ok: x => expect(x).toEqual([5,2,3]),
+        Err: () => done.fail()
+      })
+
+    done()
+  })
+
+  it('collectResult: should collect an array of Oks and Errs into an Err with an array of errors', done => {
+    const data = [Ok(5), Err('nope'), Ok(3)]
+
+    collectResult(data)
+      .cata({
+        Ok: () => done.fail(),
+        Err: x => expect(x).toEqual(['nope'])
+      })
+
+    done()
+  })
+
+  it('collectResult: should collect an empty array into Ok([])', done => {
+    const data: Array<Result<any, any>> = []
+
+    collectResult(data)
+      .cata({
+        Ok: x => expect(x).toEqual([]),
+        Err: () => done.fail()
+      })
+
+    done()
+  })
+
+  it('collectMaybe: should collect an array of Justs into a Just with an array of values', done => {
+    const data = [Just(5), Just(2), Just(3)]
+
+    collectMaybe(data)
+      .cata({
+        Just: x => expect(x).toEqual([5,2,3]),
+        Nothing: () => done.fail()
+      })
+
+    done()
+  })
+
+  it('collectMaybe: should return a Nothing if any Maybe is a Nothing', done => {
+    const data = [Just(5), Nothing, Just(3)]
+
+    collectMaybe(data)
+      .cata({
+        Just: () => done.fail(),
+        Nothing: () => done()
+      })
+
+    done()
+  })
+})
+
+it('collectMaybe: should collect an empty array into Just([])', done => {
+  const data: Array<Maybe<any>> = []
+
+  collectMaybe(data)
+    .cata({
+      Just: x => expect(x).toEqual([]),
+      Nothing: () => done.fail()
+    })
+
+  done()
 })

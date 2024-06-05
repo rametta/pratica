@@ -62,6 +62,8 @@ Table of Contents
     + [tail](#tail)
     + [tryFind](#tryfind)
     + [parseDate](#parsedate)
+    + [collectResult](#collectResult)
+    + [collectMaybe](#collectMaybe)
 
 ### Changes from V1 to V2
 
@@ -688,5 +690,51 @@ tryFind(u => u.id === '123abc')(users)
   .cata({
     Just: user => expect(user).toEqual(users[0]), // true
     Nothing: () => 'Could not find user with id 123abc' // doesn't run
+  })
+```
+
+#### collectResult
+
+Safely collect values from an array of results. Returns a result.
+
+```js
+import {collectResult} from 'pratica'
+
+const all_good = [Ok(1), Ok(2), Ok(3)]
+const one_bad = [Ok(1), Err('Some error'), Ok(3)]
+
+collectResult(all_good)
+  .cata({
+    Ok: x => expect(x).toEqual([1,2,3]), // true
+    Err: () => 'no values' // doesn't run
+  })
+
+collectResult(one_bad)
+  .cata({
+    Ok: x => x, // doesn't run
+    Err: err => expect(err).toEqual('Some error') // true
+  })
+```
+
+#### collectMaybe
+
+Safely collect values from an array of maybes. Returns a maybe.
+
+```js
+import {collectMaybe} from 'pratica'
+
+const all_good = [Just(1), Just(2), Just(3)]
+const one_bad = [Just(1), Nothing, Just(3)]
+
+collectMaybe(all_good)
+  .cata({
+    Just: x => expect(x).toEqual([1,2,3]), // true
+    Nothing: () => 'no values' // doesn't run
+  })
+
+collectMaybe(one_bad)
+  .cata({
+    Just: x => x, // doesn't run
+    Nothing: () => 'no values' // true
   })
 ```
