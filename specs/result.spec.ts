@@ -1,9 +1,9 @@
-import { describe, it, expect } from "vitest";
-import { Ok, Err, Result } from "../src/result";
+import { describe, it, expect } from "vitest"
+import { Ok, Err, Result } from "../src/result"
 
 describe("Result", () => {
-  type Person = { name: string; age: number };
-  const person: Person = { name: "jason", age: 4 };
+  type Person = { name: string; age: number }
+  const person: Person = { name: "jason", age: 4 }
 
   it("should have map", () => {
     Ok(person)
@@ -11,10 +11,10 @@ describe("Result", () => {
       .cata({
         Ok: (name) => expect(name).toBe("jason"),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
-  });
+      })
+  })
 
   it("should have chain", () => {
     Ok(person)
@@ -23,25 +23,25 @@ describe("Result", () => {
       .cata({
         Ok: (name) => expect(name).toBe("jason"),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
+      })
 
     Ok(person)
       .map((p) => p && p.name)
       .chain((name) => (name !== "jason" ? Ok(name) : Err("Name is jason")))
       .cata({
         Ok: () => {
-          throw new Error();
+          throw new Error()
         },
         Err: (msg) => expect(msg).toBe("Name is jason"),
-      });
-  });
+      })
+  })
 
   it("should have ap", () => {
-    const add = (x: number) => (y: number) => x + y;
-    const one = Ok(1);
-    const two = Ok(2);
+    const add = (x: number) => (y: number) => x + y
+    const one = Ok(1)
+    const two = Ok(2)
 
     Ok(add)
       .ap(one)
@@ -49,10 +49,10 @@ describe("Result", () => {
       .cata({
         Ok: (x) => expect(x).toBe(3),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
-  });
+      })
+  })
 
   it("should be instantiable without arguments", () => {
     Ok()
@@ -60,25 +60,22 @@ describe("Result", () => {
       .cata({
         Ok: (p) => expect(p).toBe(person),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
-  });
+      })
+  })
 
   it("when instantiated with a defined value, callbacks don't need to check against undefined", () => {
     Ok(person)
       .map((p: Person): string => p.name)
-      .chain(
-        (name: string): Result<string, string> =>
-          name === "jason" ? Ok(name) : Err("Name not jason")
-      )
+      .chain((name: string): Result<string, string> => (name === "jason" ? Ok(name) : Err("Name not jason")))
       .cata({
         Ok: (name) => expect(name).toBe("jason"),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
-  });
+      })
+  })
 
   it("should ignore mapErr if Ok", () => {
     Ok("hello")
@@ -88,10 +85,10 @@ describe("Result", () => {
       .cata({
         Ok: (x) => expect(x).toBe("hello world"),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
-  });
+      })
+  })
 
   it("should ignore chainErr if Ok", () => {
     Ok("hello")
@@ -101,10 +98,10 @@ describe("Result", () => {
       .cata({
         Ok: (x) => expect(x).toBe("hello world"),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
-  });
+      })
+  })
 
   it("should use mapErr if Err", () => {
     Err("hello")
@@ -113,11 +110,11 @@ describe("Result", () => {
       .mapErr((x) => x + " some err")
       .cata({
         Ok: () => {
-          throw new Error();
+          throw new Error()
         },
         Err: (x) => expect(x).toBe("hello some err some err"),
-      });
-  });
+      })
+  })
 
   it("should use chainErr if Err", () => {
     Err("hello")
@@ -126,11 +123,11 @@ describe("Result", () => {
       .chainErr((x) => Err(x + " some err"))
       .cata({
         Ok: () => {
-          throw new Error();
+          throw new Error()
         },
         Err: (x) => expect(x).toBe("hello some err some err"),
-      });
-  });
+      })
+  })
 
   it("should flip back to Ok if chainErr returns an Ok", () => {
     Err("hello")
@@ -140,9 +137,9 @@ describe("Result", () => {
       .cata({
         Ok: (x) => expect(x).toBe("hello some err not some err"),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
+      })
 
     Err("hello")
       .chainErr((x) => Ok(x + " some err"))
@@ -150,29 +147,29 @@ describe("Result", () => {
       .cata({
         Ok: (x) => expect(x).toBe("hello some err world"),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
-  });
+      })
+  })
 
   it("should swap Err for Ok and Ok for Err", () => {
     Ok("hello")
       .swap()
       .cata({
         Ok: () => {
-          throw new Error();
+          throw new Error()
         },
         Err: (x) => expect(x).toBe("hello"),
-      });
+      })
 
     Err("hello")
       .swap()
       .cata({
         Ok: (x) => expect(x).toBe("hello"),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
+      })
 
     Ok("hello")
       .swap()
@@ -180,37 +177,37 @@ describe("Result", () => {
       .swap()
       .cata({
         Ok: () => {
-          throw new Error();
+          throw new Error()
         },
         Err: (x) => expect(x).toBe("hello"),
-      });
-  });
+      })
+  })
 
   it("should have a bimap to map over both ok and err at once", () => {
     Ok("hello")
       .bimap(
         (x) => x + " world",
-        (x) => x + " goodbye"
+        (x) => x + " goodbye",
       )
       .cata({
         Ok: (x) => expect(x).toBe("hello world"),
         Err: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
+      })
 
     Err("hello")
       .bimap(
         (x) => x + " world",
-        (x) => x + " goodbye"
+        (x) => x + " goodbye",
       )
       .cata({
         Ok: () => {
-          throw new Error();
+          throw new Error()
         },
         Err: (x) => expect(x).toBe("hello goodbye"),
-      });
-  });
+      })
+  })
 
   it("should convert Result to Maybe", () => {
     Ok(6)
@@ -218,23 +215,23 @@ describe("Result", () => {
       .cata({
         Just: (x) => expect(x).toBe(6),
         Nothing: () => {
-          throw new Error();
+          throw new Error()
         },
-      });
+      })
 
     Err()
       .toMaybe()
       .cata({
         Just: () => {
-          throw new Error();
+          throw new Error()
         },
         Nothing: () => {},
-      });
-  });
+      })
+  })
 
   it("should return the value or error", () => {
-    expect(Ok(6).value()).toBe(6);
+    expect(Ok(6).value()).toBe(6)
 
-    expect(Err("Test Error").value()).toEqual("Test Error");
-  });
-});
+    expect(Err("Test Error").value()).toEqual("Test Error")
+  })
+})

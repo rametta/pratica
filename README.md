@@ -64,15 +64,6 @@ Table of Contents
   - [collectResult](#collectResult)
   - [collectMaybe](#collectMaybe)
 
-### Changes from V1 to V2
-
-If you are migrating from Pratica V1 to V2. Here is a small list of changes made:
-
-- `Maybe()` utility was renamed to `nullable()`
-- `.default(() => 'value')` was renamed to `.alt('value')` and does not require a function to be passed in, just a value.
-
-That's it. Enjoy.
-
 ### Monads
 
 #### Maybe
@@ -182,12 +173,10 @@ Inspect is used for seeing a string respresentation of the Maybe. It is used mos
 ```js
 import { nullable } from "pratica"
 
-const { log } = console
-
-log(nullable(86).inspect()) // `Just(86)`
-log(nullable("HELLO").inspect()) // `Just('HELLO')`
-log(nullable(null).inspect()) // `Nothing`
-log(nullable(undefined).inspect()) // `Nothing`
+nullable(86).inspect() // `Just(86)`
+nullable("HELLO").inspect() // `Just('HELLO')`
+nullable(null).inspect() // `Nothing`
+nullable(undefined).inspect() // `Nothing`
 ```
 
 ##### Maybe.cata
@@ -238,10 +227,8 @@ import { Just, Nothing } from "pratica"
 
 const isOver6Feet = (height) => (height > 6 ? Just(height) : Nothing)
 
-const { log } = console
-
-log(isOver6Feet(7).isJust()) // true
-log(isOver6Feet(4).isJust()) // false
+isOver6Feet(7).isJust() // true
+isOver6Feet(4).isJust() // false
 ```
 
 ##### Maybe.isNothing
@@ -253,10 +240,8 @@ import { Just, Nothing } from "pratica"
 
 const isOver6Feet = (height) => (height > 6 ? Just(height) : Nothing)
 
-const { log } = console
-
-log(isOver6Feet(7).isNothing()) // false
-log(isOver6Feet(4).isNothing()) // true
+isOver6Feet(7).isNothing() // false
+isOver6Feet(4).isNothing() // true
 ```
 
 ##### Maybe.value
@@ -268,10 +253,8 @@ import { Just, Nothing } from "pratica"
 
 const isOver6Feet = (height) => (height > 6 ? Just(height) : Nothing)
 
-const { log } = console
-
-log(isOver6Feet(7).value()) // 7
-log(isOver6Feet(4).value()) // undefined
+isOver6Feet(7).value() // 7
+isOver6Feet(4).value() // undefined
 ```
 
 #### Result
@@ -418,12 +401,10 @@ Ok(null) // no function to apply
 ```js
 import { Ok, Err } from "pratica"
 
-const { log } = console
-
-log(Ok(86).inspect()) // `Ok(86)`
-log(Ok("HELLO").inspect()) // `Ok('HELLO')`
-log(Err("Something happened").inspect()) // `Err('Something happened')`
-log(Err(404).inspect()) // `Err(404)`
+Ok(86).inspect() // `Ok(86)`
+Ok("HELLO").inspect() // `Ok('HELLO')`
+Err("Something happened").inspect() // `Err('Something happened')`
+Err(404).inspect() // `Err(404)`
 ```
 
 ##### Result.cata
@@ -470,10 +451,8 @@ import { Ok, Err } from "pratica"
 
 const isOver6Feet = (height) => (height > 6 ? Ok(height) : Err("Shorty"))
 
-const { log } = console
-
-log(isOver6Feet(7).isOk()) // true
-log(isOver6Feet(4).isOk()) // false
+isOver6Feet(7).isOk() // true
+isOver6Feet(4).isOk() // false
 ```
 
 ##### Result.isErr
@@ -483,10 +462,8 @@ import { Ok, Err } from "pratica"
 
 const isOver6Feet = (height) => (height > 6 ? Ok(height) : Err("Shorty"))
 
-const { log } = console
-
-log(isOver6Feet(7).isErr()) // false
-log(isOver6Feet(4).isErr()) // true
+isOver6Feet(7).isErr() // false
+isOver6Feet(4).isErr() // true
 ```
 
 ##### Result.value
@@ -499,8 +476,8 @@ import { Ok, Err } from "pratica"
 const six = Ok(6).value()
 const error = Err("Something happened").value()
 
-log(six) // 6
-log(error) // 'Something happened'
+console.log(six) // 6
+console.log(error) // 'Something happened'
 ```
 
 ### Utilities

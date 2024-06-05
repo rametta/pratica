@@ -35,7 +35,7 @@
     "test": "vitest",
     "build": "bun run rollup -c",
     "deploy": "bun run build && bun run publish",
-    "pretty": "prettier --check 'src/**/*.ts'",
-    "pretty-fix": "prettier --write 'src/**/*.ts'"
+    "pretty": "prettier --check '{src,specs}/**/*.ts'",
+    "pretty-fix": "prettier --write '{src,specs}/**/*.ts'"
   }
 }
